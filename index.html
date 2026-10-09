@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Taha Chess</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px 12px 30px;background:#10151f;color:#f4f6fa;font-family:Tahoma,Arial,sans-serif;text-align:center}
+.app{max-width:480px;margin:auto}
+h1{margin:5px;color:#d9edbd;font-size:29px}
+.sub{color:#9baac0;font-size:13px;margin:8px 0 20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1b2432;padding:13px;border-radius:13px;margin-bottom:12px}
+#status{font-size:13px;text-align:right}
+.tag{color:#c4e88d;font-size:11px;white-space:nowrap}
+.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border:5px solid #29374a;border-radius:8px;overflow:hidden;direction:ltr;box-shadow:0 12px 35px #0006}
+.square{border:0;margin:0;padding:0;position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;font-family:Arial,sans-serif;font-size:clamp(27px,8vw,45px);cursor:pointer;touch-action:manipulation;user-select:none}
+.light{background:#e7e2d4}.dark{background:#748c7c}
+.square.selected{background:#e8d36d!important}
+.square.last{background:#baca65}
+.square.hint:after{content:"";position:absolute;width:24%;height:24%;border-radius:50%;background:#253b348c}
+.square.capture:after{content:"";position:absolute;inset:3px;border:4px solid #b34d58;border-radius:50%}
+.piece.white{color:#fff;text-shadow:1px 2px 2px #222,0 0 2px #222}
+.piece.black{color:#20242c;text-shadow:0 1px 1px #fff6}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+button.action,select{background:#263346;color:#f5f7fb;border:1px solid #3c4b60;padding:12px 8px;border-radius:11px;font-size:13px;cursor:pointer}
+button.action:active{transform:scale(.98)}
+select{width:100%;margin-top:10px}
+.history{margin-top:14px;background:#1b2432;border-radius:13px;padding:13px;text-align:right}
+.history h3{margin:0 0 8px;font-size:13px;color:#d9edbd}
+#moves{font-size:12px;color:#c1ccda;line-height:2;overflow-wrap:anywhere}
+footer{color:#718096;font-size:11px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>♟ TAHA CHESS</h1>
+<div class="sub">فکر کن، حرکت کن، برنده شو.</div>
+
+<div class="top">
+ <div id="status">در حال آماده‌سازی...</div>
+ <div class="tag">♛ CHESS ARENA</div>
+</div>
+
+<div class="board" id="board"></div>
+
+<div class="controls">
+ <button class="action" onclick="undoMove()">↩️ برگشت حرکت</button>
+ <button class="action" onclick="newGame()">🔄 بازی جدید</button>
+</div>
+
+<select id="mode" onchange="newGame()">
+ <option value="ai">🤖 بازی با کامپیوتر</option>
+ <option value="two">👥 بازی دونفره</option>
+</select>
+
+<div class="history">
+ <h3>📜 تاریخچه حرکات</h3>
+ <div id="moves">هنوز حرکتی انجام نشده.</div>
+</div>
+<footer>TAHA CHESS · موفق باشی! ♟️</footer>
+</div>
+
+<script>
+const boardEl=document.getElementById('board');
+const statusEl=document.getElementById('status');
+const movesEl=document.getElementById('moves');
+const game=new Chess();
+
+const symbols={
+ wk:'♔',wq:'♕',wr:'♖',wb:'♗',wn:'♘',wp:'♙',
+ bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟'
+};
+
+let selected=null;
+let targets=[];
+let lastMove=null;
+let thinking=false;
+
+function render(){
+ boardEl.innerHTML='';
+ const position=game.board();
+
+ for(let r=0;r<8;r++){
+  for(let c=0;c<8;c++){
+   const square=String.fromCharCode(97+c)+(8-r);
+   const piece=position[r][c];
+   const cell=document.createElement('button');
+
+   cell.className='square '+((r+c)%2===0?'light':'dark');
+   cell.setAttribute('aria-label',square);
+
+   if(lastMove&&(square===lastMove.from||square===lastMove.to))
+    cell.classList.add('last');
+   if(square===selected)cell.classList.add('selected');
+
+   const target=targets.find(m=>m.to===square);
+   if(target)cell.classList.add(piece?'capture':'hint');
+
+   if(piece){
+    const span=document.createElement('span');
+    span.className='piece '+(piece.color==='w'?'white':'black');
+    span.textContent=symbols[piece.color+piece.type];
+    cell.appendChild(span);
+   }
+
+   cell.addEventListener('click',()=>tapSquare(square));
+   boardEl.appendChild(cell);
+  }
+ }
+ updateStatus();
+ updateHistory();
+}
+
+function updateStatus(){
+ if(game.in_checkmate()){
+  statusEl.textContent='مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد 🏆';
+ }else if(game.in_draw()){
+  statusEl.textContent='بازی مساوی شد 🤝';
+ }else if(game.in_check()){
+  statusEl.textContent='کیش! نوبت '+(game.turn()==='w'?'سفید':'سیاه');
+ }else if(thinking){
+  statusEl.textContent='کامپیوتر فکر می‌کند...';
+ }else{
+  statusEl.textContent='نوبت '+(game.turn()==='w'?'سفید ⚪':'سیاه ⚫');
+ }
+}
+
+function updateHistory(){
+ const history=game.history();
+ if(!history.length){
+  movesEl.textContent='هنوز حرکتی انجام نشده.';
+  return;
+ }
+ const rows=[];
+ for(let i=0;i<history.length;i+=2){
+  rows.push((Math.floor(i/2)+1)+'. '+history[i]+
+    (history[i+1]?'  '+history[i+1]:''));
+ }
+ movesEl.textContent=rows.join(' | ');
+}
+
+function tapSquare(square){
+ if(thinking||game.game_over())return;
+ if(document.getElementById('mode').value==='ai'&&game.turn()==='b')return;
+
+ const piece=game.get(square);
+
+ if(selected){
+  const target=targets.find(m=>m.to===square);
+  if(target){
+   const result=game.move({
+    from:selected,to:square,promotion:'q'
+   });
+   if(result){
+    lastMove={from:result.from,to:result.to};
+    selected=null;
+    targets=[];
+    render();
+
+    if(!game.game_over()&&document.getElementById('mode').value==='ai'){
+     thinking=true;
+     updateStatus();
+     setTimeout(aiMove,350);
+    }
+    return;
+   }
+  }
+ }
+
+ if(piece&&piece.color===game.turn()){
+  selected=square;
+  targets=game.moves({square:square,verbose:true});
+ }else{
+  selected=null;
+  targets=[];
+ }
+ render();
+}
+
+/* حریف ساده با ارزیابی مهره‌ها و یک حرکت قانونی */
+function aiMove(){
+ if(game.game_over()){
+  thinking=false;
+  render();
+  return;
+ }
+
+ const moves=game.moves({verbose:true});
+ if(!moves.length){
+  thinking=false;
+  render();
+  return;
+ }
+
+ const value={p:100,n:320,b:330,r:500,q:900,k:20000};
+
+ function evaluate(move){
+  let score=Math.random()*20;
+
+  if(move.captured)score+=value[move.captured]*1.2;
+  if(move.promotion)score+=800;
+  if(move.san.includes('+'))score+=45;
+  if(move.san.includes('#'))score+=100000;
+
+  // از حرکات کاملاً تصادفی کمی فاصله می‌گیریم
+  const centerSquares=['d4','e4','d5','e5'];
+  if(centerSquares.includes(move.to))score+=12;
+  if(move.piece==='n'||move.piece==='b')score+=5;
+
+  return score;
+ }
+
+ moves.sort((a,b)=>evaluate(b)-evaluate(a));
+ const chosen=moves[0];
+
+ const result=game.move({
+  from:chosen.from,
+  to:chosen.to,
+  promotion:'q'
+ });
+
+ if(result)lastMove={from:result.from,to:result.to};
+
+ thinking=false;
+ selected=null;
+ targets=[];
+ render();
+}
+
+function undoMove(){
+ if(thinking||!game.history().length)return;
+
+ game.undo();
+
+ if(document.getElementById('mode').value==='ai'&&game.history().length){
+  if(game.turn()==='b')game.undo();
+ }
+
+ const history=game.history({verbose:true});
+ lastMove=history.length?
+  {from:history[history.length-1].from,to:history[history.length-1].to}:null;
+
+ selected=null;
+ targets=[];
+ render();
+}
+
+function newGame(){
+ game.reset();
+ selected=null;
+ targets=[];
+ lastMove=null;
+ thinking=false;
+ render();
+}
+
+render();
+</script>
+</body>
+</html>
