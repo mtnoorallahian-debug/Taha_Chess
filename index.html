@@ -989,7 +989,7 @@ function initializeChess() {
 
     if(reason==="checkmate"){
       $("resultDetail").textContent=
-        `شاه مات‌شده مشخص است؛ ${checkingAttackers.length} مهرهٔ مهاجم با هالهٔ قرمز نمایش داده${checkingAttackers.length===1?" است":" شده‌اند"}.`;
+        `شاه مات‌شده مشخص است؛ ${checkingAttackers.length}${checkingAttackers.length===1?" است":" شده‌اند"}.`;
     }else{
       $("resultDetail").textContent=message;
     }
