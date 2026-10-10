@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TAHA CHESS</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-
 <style>
 :root{
   --bg:#10141c;--panel:#1b2230;--panel2:#252f40;
@@ -39,14 +38,8 @@ main{
 }
 .player-name{font-weight:bold}
 .player-sub{font-size:12px;color:var(--muted);margin-top:5px}
-.clock-wrap{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:4px;flex-shrink:0
-}
-.clock-label{
-  direction:ltr;font-size:11px;color:var(--muted);
-  white-space:nowrap;text-align:center
-}
+.clock-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0}
+.clock-label{direction:ltr;font-size:11px;color:var(--muted);white-space:nowrap;text-align:center}
 .clock{
   direction:ltr;font-family:monospace;font-weight:bold;
   font-size:clamp(20px,4vw,30px);background:#111722;padding:7px 12px;
@@ -55,7 +48,6 @@ main{
 .clock.active{color:var(--accent);border-color:var(--accent)}
 .clock.low{color:var(--red)}
 .clock.no-time{font-size:16px;color:var(--muted)}
-
 #board{
   width:100%;aspect-ratio:1;display:grid;position:relative;
   grid-template-columns:repeat(8,minmax(0,1fr));
@@ -81,13 +73,12 @@ main{
 }
 .piece{
   z-index:1;font-family:"DejaVu Sans","Arial Unicode MS",serif;
-  font-size:clamp(27px,6.8vw,58px);line-height:1;pointer-events:none;
-  position:relative
+  font-size:clamp(27px,6.8vw,58px);line-height:1;pointer-events:none;position:relative
 }
 .piece.white{color:#fff;text-shadow:1px 2px 2px #000,0 0 2px #000}
 .piece.black{color:#171b22;text-shadow:0 1px 1px #ffffff66}
 
-/* شاه مات‌شده */
+/* افکت شاه مات‌شده */
 .square.mated{
   background:#9e4854!important;
   box-shadow:inset 0 0 0 3px #ff9ba5;
@@ -110,28 +101,14 @@ main{
   animation:crownShard 1.1s ease-out both
 }
 
-/* مهره‌های مهاجم */
+/* هالهٔ قرمز مهره‌های مهاجم؛ بدون خط */
 .square.attacker{
   z-index:3;
   box-shadow:inset 0 0 0 3px #ff5268,0 0 12px #ff526888;
   animation:attackerPulse 1.6s ease-in-out infinite
 }
-.square.attacker .piece{
-  filter:drop-shadow(0 0 5px #ff5268);
-}
-#attackLines{
-  position:absolute;inset:0;width:100%;height:100%;
-  z-index:5;pointer-events:none;overflow:visible
-}
-.attack-line{
-  stroke:#ff5268;stroke-width:4;stroke-linecap:round;
-  stroke-dasharray:10 8;opacity:.95;
-  filter:drop-shadow(0 0 3px #24050a);
-  animation:lineAppear .55s ease-out both
-}
-.attack-dot{
-  fill:#ff5268;stroke:#fff;stroke-width:2
-}
+.square.attacker .piece{filter:drop-shadow(0 0 5px #ff5268)}
+
 @keyframes kingDefeat{
   0%{transform:translateY(0) rotate(0) scale(1);filter:brightness(1)}
   22%{transform:translateY(-3px) rotate(-5deg) scale(1.08);filter:brightness(1.35)}
@@ -154,16 +131,9 @@ main{
   0%,100%{filter:brightness(1)}
   50%{filter:brightness(1.15)}
 }
-@keyframes lineAppear{
-  from{opacity:0;stroke-dashoffset:30}
-  to{opacity:.95;stroke-dashoffset:0}
-}
 @media(prefers-reduced-motion:reduce){
-  .square.mated .piece,.square.mated::before,.square.mated::after,
-  .square.attacker,.attack-line{animation:none}
-  .square.mated::before{opacity:.65}
+  .square.mated .piece,.square.mated::before,.square.mated::after,.square.attacker{animation:none}
 }
-
 .coordinates{
   position:absolute;font-size:clamp(8px,1.6vw,12px);
   font-weight:bold;z-index:2;pointer-events:none;opacity:.8
@@ -172,52 +142,31 @@ main{
 .coord-rank{top:2px;right:4px}
 .square.light .coordinates{color:#40564a}
 .square.dark .coordinates{color:#f3f5f7}
-
 #status{
   text-align:center;color:var(--muted);min-height:42px;
   padding:13px 4px 4px;font-size:14px;line-height:1.8
 }
-#status.result{
-  color:var(--accent);font-weight:bold;
-  font-size:clamp(15px,3vw,19px);padding-top:15px
-}
-.result-detail{
-  text-align:center;color:var(--muted);font-size:12px;
-  line-height:1.9;margin:0 0 10px
-}
+#status.result{color:var(--accent);font-weight:bold;font-size:clamp(15px,3vw,19px);padding-top:15px}
+.result-detail{text-align:center;color:var(--muted);font-size:12px;line-height:1.9;margin:0 0 10px}
 .end-actions{
   display:none;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:8px;margin-top:10px
 }
 .end-actions.visible{display:grid}
-.actions{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;margin-top:10px
-}
-.btn{
-  padding:11px 8px;border:0;border-radius:10px;
-  font-weight:bold;color:var(--text);background:#303b4d
-}
+.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.btn{padding:11px 8px;border:0;border-radius:10px;font-weight:bold;color:var(--text);background:#303b4d}
 .btn:hover{filter:brightness(1.13)}
 .btn.primary{background:var(--accent);color:#10231c}
 .side-title{font-weight:bold;font-size:17px;margin:3px 0 15px}
 .note{color:var(--muted);font-size:12px;line-height:1.9}
-.moves{
-  max-height:320px;overflow:auto;background:#111722;
-  border-radius:10px;padding:8px
-}
-.move-row{
-  display:grid;grid-template-columns:36px 1fr 1fr;
-  gap:6px;padding:7px;border-bottom:1px solid #ffffff0d;font-size:13px
-}
+.moves{max-height:320px;overflow:auto;background:#111722;border-radius:10px;padding:8px}
+.move-row{display:grid;grid-template-columns:36px 1fr 1fr;gap:6px;padding:7px;border-bottom:1px solid #ffffff0d;font-size:13px}
 .move-num{color:var(--muted)}
 .move-cell{text-align:center}
 .footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
-
 .overlay{
   position:fixed;inset:0;background:#080b10eF;z-index:10;
-  display:flex;justify-content:center;align-items:center;
-  padding:18px;overflow:auto
+  display:flex;justify-content:center;align-items:center;padding:18px;overflow:auto
 }
 .modal{
   width:min(430px,100%);max-height:95vh;overflow:auto;
@@ -225,27 +174,17 @@ main{
   border-radius:20px;padding:24px;box-shadow:0 20px 80px #0008
 }
 .modal h2{margin:0 0 10px;text-align:center}
-.modal p{
-  color:var(--muted);font-size:13px;
-  line-height:1.9;text-align:center
-}
+.modal p{color:var(--muted);font-size:13px;line-height:1.9;text-align:center}
 .field{margin-bottom:14px}
-.field label{
-  display:block;color:var(--muted);font-size:13px;margin-bottom:7px
-}
+.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}
 .field select{
   width:100%;padding:11px;background:#111722;
   border:1px solid #ffffff20;border-radius:10px;color:var(--text)
 }
 .modal .btn{width:100%;margin-top:10px}
 .hidden{display:none!important}
-.promo-options{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px
-}
-.promo-piece{
-  background:var(--panel2);border:1px solid #ffffff18;
-  border-radius:12px;font-size:38px;padding:10px 0;color:white
-}
+.promo-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
+.promo-piece{background:var(--panel2);border:1px solid #ffffff18;border-radius:12px;font-size:38px;padding:10px 0;color:white}
 @media(max-width:800px){
   main{grid-template-columns:1fr;max-width:620px}
   .panel{padding:12px}
@@ -261,7 +200,6 @@ main{
 }
 </style>
 </head>
-
 <body>
 <header>
   <div class="logo">TAHA CHESS</div>
@@ -322,7 +260,6 @@ main{
   <div class="modal">
     <h2>♟ TAHA CHESS</h2>
     <p>تنظیمات مسابقه رو انتخاب کن و بعد شروع بزن!</p>
-
     <div class="field">
       <label for="startMode">نوع بازی</label>
       <select id="startMode">
@@ -330,7 +267,6 @@ main{
         <option value="pvp">دو نفره روی یک دستگاه</option>
       </select>
     </div>
-
     <div class="field" id="difficultyField">
       <label for="difficulty">درجه سختی هوش مصنوعی</label>
       <select id="difficulty">
@@ -339,7 +275,6 @@ main{
         <option value="hard">سخت</option>
       </select>
     </div>
-
     <div class="field" id="playerColorField">
       <label for="playerColor">رنگ مهره‌های شما</label>
       <select id="playerColor">
@@ -347,7 +282,6 @@ main{
         <option value="b">مشکی ♚</option>
       </select>
     </div>
-
     <div class="field">
       <label for="timeControl">زمان مسابقه</label>
       <select id="timeControl">
@@ -361,7 +295,6 @@ main{
         <option value="910">۱۵ دقیقه + ۱۰ ثانیه · Rapid</option>
       </select>
     </div>
-
     <button class="btn primary" id="overlayStartBtn" type="button">شروع مسابقه ♟</button>
   </div>
 </div>
@@ -382,1033 +315,629 @@ main{
 <script>
 "use strict";
 
-const $ = id => document.getElementById(id);
-
 if (typeof Chess === "undefined") {
-  $("status").textContent =
+  document.getElementById("status").textContent =
     "کتابخانه شطرنج بارگذاری نشد؛ اینترنت رو بررسی کن و صفحه رو دوباره بارگذاری کن.";
-  $("overlayStartBtn").disabled = true;
+  document.getElementById("overlayStartBtn").disabled = true;
 } else {
   initializeChess();
 }
 
 function initializeChess() {
+  const $ = id => document.getElementById(id);
   let game = new Chess();
 
   const symbols = {
     wk:"♔",wq:"♕",wr:"♖",wb:"♗",wn:"♘",wp:"♙",
     bk:"♚",bq:"♛",br:"♜",bb:"♝",bn:"♞",bp:"♟"
   };
-
   const values = {p:100,n:320,b:330,r:500,q:900,k:20000};
 
-  let selectedSquare = null;
-  let legalTargets = [];
-  let lastMove = null;
-  let flipped = false;
-  let running = false;
-  let finished = false;
-  let mode = "ai";
-  let difficulty = "medium";
-  let humanColor = "w";
-  let aiColor = "b";
-  let timed = true;
-  let baseSeconds = 600;
-  let incrementSeconds = 0;
-  let whiteSeconds = 600;
-  let blackSeconds = 600;
-  let activeClock = "w";
-  let turnStartedAt = 0;
-  let clockInterval = null;
-  let aiToken = 0;
-  let pendingPromotion = null;
-  let clockSnapshots = [];
-  let matedSquare = null;
-  let checkingAttackers = [];
+  let selectedSquare = null, legalTargets = [], lastMove = null;
+  let flipped = false, running = false, finished = false;
+  let mode = "ai", difficulty = "medium", humanColor = "w", aiColor = "b";
+  let timed = true, baseSeconds = 600, incrementSeconds = 0;
+  let whiteSeconds = 600, blackSeconds = 600;
+  let activeClock = "w", turnStartedAt = 0, clockInterval = null;
+  let aiToken = 0, pendingPromotion = null, clockSnapshots = [];
+  let matedSquare = null, checkingAttackers = [];
 
-  function now() {
-    return Date.now();
-  }
-
-  function remaining(side) {
-    return side === "w" ? whiteSeconds : blackSeconds;
-  }
-
-  function setRemaining(side, value) {
-    if (side === "w") whiteSeconds = value;
+  function now(){return Date.now();}
+  function remaining(side){return side === "w" ? whiteSeconds : blackSeconds;}
+  function setRemaining(side,value){
+    if(side === "w") whiteSeconds = value;
     else blackSeconds = value;
   }
-
-  function formatTime(seconds) {
-    seconds = Math.max(0, seconds);
+  function formatTime(seconds){
+    seconds = Math.max(0,seconds);
     const whole = Math.ceil(seconds);
-    const minutes = Math.floor(whole / 60);
-    const secs = whole % 60;
-    const tenths = Math.floor((seconds % 1) * 10);
-
-    if (whole < 10 && seconds > 0) {
+    const minutes = Math.floor(whole/60);
+    const secs = whole%60;
+    const tenths = Math.floor((seconds%1)*10);
+    if(whole < 10 && seconds > 0)
       return `${minutes}:${String(secs).padStart(2,"0")}.${tenths}`;
-    }
-
     return `${minutes}:${String(secs).padStart(2,"0")}`;
   }
-
-  function getTimeLabel(value) {
+  function getTimeLabel(value){
     const labels = {
-      0: "Untimed · ∞",
-      60: "Bullet · 1+0",
-      180: "Blitz · 3+0",
-      182: "Blitz · 3+2",
-      300: "Blitz · 5+0",
-      303: "Blitz · 5+3",
-      600: "Rapid · 10+0",
-      910: "Rapid · 15+10"
+      0:"Untimed · ∞",60:"Bullet · 1+0",180:"Blitz · 3+0",
+      182:"Blitz · 3+2",300:"Blitz · 5+0",303:"Blitz · 5+3",
+      600:"Rapid · 10+0",910:"Rapid · 15+10"
     };
-
     return labels[value] || "Chess";
   }
 
-  function chargeClock() {
-    if (!running || finished || !timed || !turnStartedAt) return;
+  // زمان فقط بر اساس زمان واقعی سپری‌شده کم می‌شود.
+  function chargeClock(){
+    if(!running || finished || !timed || !turnStartedAt) return;
 
     const time = now();
-    const elapsed = Math.max(0, (time - turnStartedAt) / 1000);
-
-    setRemaining(activeClock, remaining(activeClock) - elapsed);
+    const elapsed = Math.max(0,(time-turnStartedAt)/1000);
+    setRemaining(activeClock,remaining(activeClock)-elapsed);
     turnStartedAt = time;
 
-    if (remaining(activeClock) <= 0) {
-      setRemaining(activeClock, 0);
+    if(remaining(activeClock) <= 0){
+      setRemaining(activeClock,0);
       renderClocks();
-
       finishGame(
         activeClock === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
-        "زمان بازیکن تمام شد.",
-        "timeout"
+        "زمان بازیکن تمام شد.","timeout"
       );
     }
   }
 
-  function renderClocks() {
-    const w = $("whiteTime");
-    const b = $("blackTime");
-
-    w.classList.toggle(
-      "active",
-      running && !finished && activeClock === "w" && timed
+  function renderClocks(){
+    $("whiteTime").classList.toggle(
+      "active",running && !finished && activeClock === "w" && timed
     );
-    b.classList.toggle(
-      "active",
-      running && !finished && activeClock === "b" && timed
+    $("blackTime").classList.toggle(
+      "active",running && !finished && activeClock === "b" && timed
     );
-
-    w.classList.toggle("low", timed && whiteSeconds <= 10 && whiteSeconds > 0);
-    b.classList.toggle("low", timed && blackSeconds <= 10 && blackSeconds > 0);
-
-    w.classList.toggle("no-time", !timed);
-    b.classList.toggle("no-time", !timed);
-
-    w.textContent = timed ? formatTime(whiteSeconds) : "∞ بدون زمان";
-    b.textContent = timed ? formatTime(blackSeconds) : "∞ بدون زمان";
+    $("whiteTime").classList.toggle("low",timed && whiteSeconds<=10 && whiteSeconds>0);
+    $("blackTime").classList.toggle("low",timed && blackSeconds<=10 && blackSeconds>0);
+    $("whiteTime").classList.toggle("no-time",!timed);
+    $("blackTime").classList.toggle("no-time",!timed);
+    $("whiteTime").textContent = timed ? formatTime(whiteSeconds) : "∞ بدون زمان";
+    $("blackTime").textContent = timed ? formatTime(blackSeconds) : "∞ بدون زمان";
   }
 
-  function findKingSquare(color) {
+  function findKingSquare(color){
     const board = game.board();
-
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
+    for(let row=0;row<8;row++){
+      for(let col=0;col<8;col++){
         const p = board[row][col];
-
-        if (p && p.type === "k" && p.color === color) {
-          return String.fromCharCode(97 + col) + (8 - row);
-        }
+        if(p && p.type==="k" && p.color===color)
+          return String.fromCharCode(97+col)+(8-row);
       }
     }
-
     return null;
   }
 
-  function squareCoords(square) {
-    return {
-      file: square.charCodeAt(0) - 97,
-      rank: Number(square[1])
-    };
+  function squareCoords(square){
+    return {file:square.charCodeAt(0)-97,rank:Number(square[1])};
   }
 
-  function pathIsClear(from, to) {
-    const a = squareCoords(from);
-    const b = squareCoords(to);
+  function pathIsClear(from,to){
+    const a=squareCoords(from),b=squareCoords(to);
+    const df=Math.sign(b.file-a.file),dr=Math.sign(b.rank-a.rank);
+    let file=a.file+df,rank=a.rank+dr;
 
-    const df = Math.sign(b.file - a.file);
-    const dr = Math.sign(b.rank - a.rank);
-
-    let file = a.file + df;
-    let rank = a.rank + dr;
-
-    while (file !== b.file || rank !== b.rank) {
-      const sq = String.fromCharCode(97 + file) + rank;
-
-      if (game.get(sq)) return false;
-
-      file += df;
-      rank += dr;
+    while(file!==b.file || rank!==b.rank){
+      const sq=String.fromCharCode(97+file)+rank;
+      if(game.get(sq)) return false;
+      file+=df;rank+=dr;
     }
-
     return true;
   }
 
-  // تشخیص هندسی اینکه یک مهره به خانهٔ شاه حمله می‌کند یا نه
-  function pieceAttacksSquare(from, piece, target) {
-    if (!piece || !target || from === target) return false;
+  function pieceAttacksSquare(from,piece,target){
+    if(!piece || !target || from===target) return false;
+    const a=squareCoords(from),b=squareCoords(target);
+    const df=b.file-a.file,dr=b.rank-a.rank;
+    const af=Math.abs(df),ar=Math.abs(dr);
 
-    const a = squareCoords(from);
-    const b = squareCoords(target);
-
-    const df = b.file - a.file;
-    const dr = b.rank - a.rank;
-    const af = Math.abs(df);
-    const ar = Math.abs(dr);
-
-    switch (piece.type) {
-      case "p":
-        return af === 1 && dr === (piece.color === "w" ? 1 : -1);
-
-      case "n":
-        return (af === 1 && ar === 2) || (af === 2 && ar === 1);
-
-      case "k":
-        return Math.max(af, ar) === 1;
-
-      case "b":
-        return af === ar && pathIsClear(from, target);
-
-      case "r":
-        return (df === 0 || dr === 0) && pathIsClear(from, target);
-
-      case "q":
-        return (
-          (df === 0 || dr === 0 || af === ar) &&
-          pathIsClear(from, target)
-        );
-
-      default:
-        return false;
+    switch(piece.type){
+      case "p": return af===1 && dr===(piece.color==="w"?1:-1);
+      case "n": return (af===1 && ar===2)||(af===2 && ar===1);
+      case "k": return Math.max(af,ar)===1;
+      case "b": return af===ar && pathIsClear(from,target);
+      case "r": return (df===0 || dr===0) && pathIsClear(from,target);
+      case "q": return (df===0 || dr===0 || af===ar) && pathIsClear(from,target);
+      default: return false;
     }
   }
 
-  function findCheckingAttackers(kingSquare) {
-    if (!kingSquare) return [];
+  function findCheckingAttackers(kingSquare){
+    if(!kingSquare) return [];
+    const king=game.get(kingSquare);
+    if(!king || king.type!=="k") return [];
 
-    const king = game.get(kingSquare);
-    if (!king || king.type !== "k") return [];
-
-    const board = game.board();
-    const attackers = [];
-
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        const piece = board[row][col];
-
-        if (!piece || piece.color === king.color) continue;
-
-        const from = String.fromCharCode(97 + col) + (8 - row);
-
-        if (pieceAttacksSquare(from, piece, kingSquare)) {
-          attackers.push(from);
-        }
+    const board=game.board(),attackers=[];
+    for(let row=0;row<8;row++){
+      for(let col=0;col<8;col++){
+        const piece=board[row][col];
+        if(!piece || piece.color===king.color) continue;
+        const from=String.fromCharCode(97+col)+(8-row);
+        if(pieceAttacksSquare(from,piece,kingSquare)) attackers.push(from);
       }
     }
-
     return attackers;
   }
 
-  function getMatedKingSquare() {
-    if (!game.in_checkmate()) return null;
-    return findKingSquare(game.turn());
-  }
+  function render(){
+    const boardEl=$("board");
+    boardEl.innerHTML="";
+    const matrix=game.board();
 
-  function drawAttackLines() {
-    const board = $("board");
-    const oldSvg = $("attackLines");
-
-    if (oldSvg) oldSvg.remove();
-
-    if (!finished || !matedSquare || !checkingAttackers.length) return;
-
-    const svgNS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNS, "svg");
-
-    svg.id = "attackLines";
-    svg.setAttribute("viewBox", "0 0 800 800");
-    svg.setAttribute("preserveAspectRatio", "none");
-    svg.setAttribute("aria-hidden", "true");
-
-    const boardRect = board.getBoundingClientRect();
-
-    if (!boardRect.width || !boardRect.height) return;
-
-    function centerOf(square) {
-      const cell = board.querySelector(
-        `[data-square="${square}"]`
-      );
-
-      if (!cell) return null;
-
-      const rect = cell.getBoundingClientRect();
-
-      return {
-        x: ((rect.left + rect.width / 2 - boardRect.left) / boardRect.width) * 800,
-        y: ((rect.top + rect.height / 2 - boardRect.top) / boardRect.height) * 800
-      };
-    }
-
-    checkingAttackers.forEach(from => {
-      const a = centerOf(from);
-      const b = centerOf(matedSquare);
-
-      if (!a || !b) return;
-
-      const line = document.createElementNS(svgNS, "line");
-      line.setAttribute("x1", a.x);
-      line.setAttribute("y1", a.y);
-      line.setAttribute("x2", b.x);
-      line.setAttribute("y2", b.y);
-      line.setAttribute("class", "attack-line");
-
-      const dot = document.createElementNS(svgNS, "circle");
-      dot.setAttribute("cx", a.x);
-      dot.setAttribute("cy", a.y);
-      dot.setAttribute("r", 8);
-      dot.setAttribute("class", "attack-dot");
-
-      svg.appendChild(line);
-      svg.appendChild(dot);
-    });
-
-    board.appendChild(svg);
-  }
-
-  function render() {
-    const board = $("board");
-    board.innerHTML = "";
-
-    const matrix = game.board();
-
-    const files = flipped
+    const files=flipped
       ? ["h","g","f","e","d","c","b","a"]
       : ["a","b","c","d","e","f","g","h"];
-
-    const ranks = flipped
+    const ranks=flipped
       ? [1,2,3,4,5,6,7,8]
       : [8,7,6,5,4,3,2,1];
 
-    const checked = game.in_check() ? game.turn() : null;
+    const checked=game.in_check()?game.turn():null;
+    matedSquare=game.in_checkmate()?findKingSquare(game.turn()):null;
 
-    matedSquare = getMatedKingSquare();
+    if(matedSquare && finished) checkingAttackers=findCheckingAttackers(matedSquare);
+    else if(!finished) checkingAttackers=[];
 
-    if (matedSquare && finished && game.in_checkmate()) {
-      checkingAttackers = findCheckingAttackers(matedSquare);
-    } else if (!finished) {
-      checkingAttackers = [];
-    }
+    for(let ri=0;ri<8;ri++){
+      for(let fi=0;fi<8;fi++){
+        const file=files[fi],rank=ranks[ri],sq=file+rank;
+        const row=8-rank,col=file.charCodeAt(0)-97;
+        const piece=matrix[row][col];
 
-    for (let ri = 0; ri < 8; ri++) {
-      for (let fi = 0; fi < 8; fi++) {
-        const file = files[fi];
-        const rank = ranks[ri];
-        const sq = file + rank;
-        const row = 8 - rank;
-        const col = file.charCodeAt(0) - 97;
-        const piece = matrix[row][col];
+        const btn=document.createElement("button");
+        btn.type="button";
+        btn.dataset.square=sq;
+        btn.className="square "+((rank+col)%2===1?"dark":"light");
 
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.dataset.square = sq;
-        btn.className =
-          "square " + ((rank + col) % 2 === 1 ? "dark" : "light");
+        if(selectedSquare===sq) btn.classList.add("selected");
+        if(lastMove && (lastMove.from===sq || lastMove.to===sq)) btn.classList.add("last");
+        if(piece && piece.type==="k" && piece.color===checked) btn.classList.add("check");
 
-        if (selectedSquare === sq) btn.classList.add("selected");
-
-        if (lastMove && (lastMove.from === sq || lastMove.to === sq)) {
-          btn.classList.add("last");
-        }
-
-        if (piece && piece.type === "k" && piece.color === checked) {
-          btn.classList.add("check");
-        }
-
-        if (sq === matedSquare && finished && game.in_checkmate()) {
+        if(sq===matedSquare && finished && game.in_checkmate()){
           btn.classList.remove("check");
           btn.classList.add("mated");
         }
-
-        if (
-          finished &&
-          game.in_checkmate() &&
-          checkingAttackers.includes(sq)
-        ) {
+        if(finished && game.in_checkmate() && checkingAttackers.includes(sq))
           btn.classList.add("attacker");
-        }
 
-        const target = legalTargets.find(m => m.to === sq);
+        const target=legalTargets.find(m=>m.to===sq);
+        if(target) btn.classList.add(game.get(sq)?"capture":"legal");
 
-        if (target) {
-          btn.classList.add(game.get(sq) ? "capture" : "legal");
-        }
-
-        if (piece) {
-          const span = document.createElement("span");
-          span.className =
-            "piece " + (piece.color === "w" ? "white" : "black");
-          span.textContent = symbols[piece.color + piece.type];
+        if(piece){
+          const span=document.createElement("span");
+          span.className="piece "+(piece.color==="w"?"white":"black");
+          span.textContent=symbols[piece.color+piece.type];
           btn.appendChild(span);
         }
-
-        if (ri === 7) {
-          const c = document.createElement("span");
-          c.className = "coordinates coord-file";
-          c.textContent = file;
-          btn.appendChild(c);
+        if(ri===7){
+          const c=document.createElement("span");
+          c.className="coordinates coord-file";c.textContent=file;btn.appendChild(c);
+        }
+        if(fi===0){
+          const c=document.createElement("span");
+          c.className="coordinates coord-rank";c.textContent=rank;btn.appendChild(c);
         }
 
-        if (fi === 0) {
-          const c = document.createElement("span");
-          c.className = "coordinates coord-rank";
-          c.textContent = rank;
-          btn.appendChild(c);
-        }
-
-        btn.addEventListener("click", () => tapSquare(sq));
-        board.appendChild(btn);
+        btn.addEventListener("click",()=>tapSquare(sq));
+        boardEl.appendChild(btn);
       }
     }
 
     renderClocks();
     updateStatus();
     updateHistory();
-
-    $("undoBtn").disabled = game.history().length === 0 || !running;
-
-    if (finished && game.in_checkmate()) {
-      drawAttackLines();
-    }
+    $("undoBtn").disabled=game.history().length===0 || !running;
   }
 
-  function updateStatus() {
-    const status = $("status");
-
-    if (finished) return;
-
+  function updateStatus(){
+    if(finished) return;
+    const status=$("status");
     status.classList.remove("result");
 
-    if (!running) {
-      status.textContent =
-        "برای شروع مسابقه، تنظیماتت رو انتخاب کن.";
+    if(!running){
+      status.textContent="برای شروع مسابقه، تنظیماتت رو انتخاب کن.";
       return;
     }
 
-    const side = game.turn() === "w" ? "سفید" : "مشکی";
-    let message = `نوبت ${side}`;
-
-    if (game.in_check()) message += " — کیش!";
-
-    if (mode === "ai" && game.turn() === aiColor) {
-      message += " — هوش مصنوعی در حال فکر کردنه...";
-    }
-
-    if (!timed) message += " · بدون محدودیت زمانی";
-
-    status.textContent = message;
+    const side=game.turn()==="w"?"سفید":"مشکی";
+    let message=`نوبت ${side}`;
+    if(game.in_check()) message+=" — کیش!";
+    if(mode==="ai" && game.turn()===aiColor)
+      message+=" — هوش مصنوعی در حال فکر کردنه...";
+    if(!timed) message+=" · بدون محدودیت زمانی";
+    status.textContent=message;
   }
 
-  function updateHistory() {
-    const box = $("moves");
-    const hist = game.history();
-
-    if (!hist.length) {
-      box.innerHTML = '<div class="note">هنوز حرکتی انجام نشده.</div>';
+  function updateHistory(){
+    const box=$("moves"),hist=game.history();
+    if(!hist.length){
+      box.innerHTML='<div class="note">هنوز حرکتی انجام نشده.</div>';
       return;
     }
-
-    box.innerHTML = "";
-
-    for (let i = 0; i < hist.length; i += 2) {
-      const row = document.createElement("div");
-      row.className = "move-row";
-
-      const num = document.createElement("span");
-      num.className = "move-num";
-      num.textContent = (Math.floor(i / 2) + 1) + ".";
-
-      const w = document.createElement("span");
-      w.className = "move-cell";
-      w.textContent = hist[i] || "";
-
-      const b = document.createElement("span");
-      b.className = "move-cell";
-      b.textContent = hist[i + 1] || "";
-
-      row.append(num, w, b);
-      box.appendChild(row);
+    box.innerHTML="";
+    for(let i=0;i<hist.length;i+=2){
+      const row=document.createElement("div");row.className="move-row";
+      const num=document.createElement("span");num.className="move-num";
+      num.textContent=(Math.floor(i/2)+1)+".";
+      const w=document.createElement("span");w.className="move-cell";w.textContent=hist[i]||"";
+      const b=document.createElement("span");b.className="move-cell";b.textContent=hist[i+1]||"";
+      row.append(num,w,b);box.appendChild(row);
     }
-
-    box.scrollTop = box.scrollHeight;
+    box.scrollTop=box.scrollHeight;
   }
 
-  function humanTurn() {
-    return mode === "pvp" || game.turn() === humanColor;
+  function humanTurn(){
+    return mode==="pvp" || game.turn()===humanColor;
   }
 
-  function tapSquare(sq) {
-    if (!running || finished || pendingPromotion || !humanTurn()) return;
+  function tapSquare(sq){
+    if(!running || finished || pendingPromotion || !humanTurn()) return;
+    const piece=game.get(sq);
 
-    const piece = game.get(sq);
-
-    if (selectedSquare) {
-      const target = legalTargets.find(m => m.to === sq);
-
-      if (target) {
-        if (target.promotion) {
-          pendingPromotion = {
-            from: selectedSquare,
-            to: sq
-          };
-
+    if(selectedSquare){
+      const target=legalTargets.find(m=>m.to===sq);
+      if(target){
+        if(target.promotion){
+          pendingPromotion={from:selectedSquare,to:sq};
           showPromotionChoices();
           return;
         }
-
         makeMove({from:selectedSquare,to:sq});
         return;
       }
     }
 
-    if (piece && piece.color === game.turn()) {
-      selectedSquare = sq;
-      legalTargets = game.moves({square:sq,verbose:true});
-    } else {
-      selectedSquare = null;
-      legalTargets = [];
+    if(piece && piece.color===game.turn()){
+      selectedSquare=sq;
+      legalTargets=game.moves({square:sq,verbose:true});
+    }else{
+      selectedSquare=null;
+      legalTargets=[];
     }
-
     render();
   }
 
-  function showPromotionChoices() {
-    const pieces = game.turn() === "w"
+  function showPromotionChoices(){
+    const pieces=game.turn()==="w"
       ? {q:"♕",r:"♖",b:"♗",n:"♘"}
       : {q:"♛",r:"♜",b:"♝",n:"♞"};
-
-    document.querySelectorAll("[data-promo]").forEach(btn => {
-      btn.textContent = pieces[btn.dataset.promo];
+    document.querySelectorAll("[data-promo]").forEach(btn=>{
+      btn.textContent=pieces[btn.dataset.promo];
     });
-
     $("promotionModal").classList.remove("hidden");
   }
 
-  document.querySelectorAll("[data-promo]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (!pendingPromotion) return;
-
-      const move = {
-        from:pendingPromotion.from,
-        to:pendingPromotion.to,
-        promotion:btn.dataset.promo
-      };
-
-      pendingPromotion = null;
+  document.querySelectorAll("[data-promo]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(!pendingPromotion) return;
+      const move={from:pendingPromotion.from,to:pendingPromotion.to,promotion:btn.dataset.promo};
+      pendingPromotion=null;
       $("promotionModal").classList.add("hidden");
       makeMove(move);
     });
   });
 
-  function saveClockSnapshot() {
+  function saveClockSnapshot(){
     clockSnapshots.push({white:whiteSeconds,black:blackSeconds});
   }
 
-  function makeMove(move) {
-    if (!running || finished) return false;
-
+  function makeMove(move){
+    if(!running || finished) return false;
     chargeClock();
-    if (finished) return false;
+    if(finished) return false;
 
     saveClockSnapshot();
+    const mover=game.turn();
+    let result=null;
 
-    const mover = game.turn();
-    let result = null;
-
-    try {
-      result = game.move(move);
-    } catch (e) {
-      result = null;
-    }
-
-    if (!result) {
+    try{result=game.move(move);}catch(e){result=null;}
+    if(!result){
       clockSnapshots.pop();
       render();
       return false;
     }
 
-    selectedSquare = null;
-    legalTargets = [];
-    lastMove = {from:result.from,to:result.to};
+    selectedSquare=null;
+    legalTargets=[];
+    lastMove={from:result.from,to:result.to};
 
-    if (timed && incrementSeconds > 0) {
+    if(timed && incrementSeconds>0)
       setRemaining(mover,remaining(mover)+incrementSeconds);
-    }
 
-    activeClock = game.turn();
-    turnStartedAt = now();
-
+    activeClock=game.turn();
+    turnStartedAt=now();
     render();
 
-    if (game.game_over()) {
+    if(game.game_over()){
       checkGameEnd();
       return true;
     }
-
-    if (mode === "ai" && game.turn() === aiColor) {
-      aiMove();
-    }
-
+    if(mode==="ai" && game.turn()===aiColor) aiMove();
     return true;
   }
 
-  function evaluatePosition() {
-    if (game.in_checkmate()) {
-      return game.turn() === aiColor ? -100000 : 100000;
-    }
+  function evaluatePosition(){
+    if(game.in_checkmate()) return game.turn()===aiColor?-100000:100000;
+    if(game.in_draw() || game.game_over()) return 0;
 
-    if (game.in_draw() || game.game_over()) return 0;
+    let score=0;
+    const board=game.board();
 
-    let score = 0;
-    const board = game.board();
-
-    for (let r = 0; r < 8; r++) {
-      for (let c = 0; c < 8; c++) {
-        const p = board[r][c];
-        if (!p) continue;
-
-        const sign = p.color === aiColor ? 1 : -1;
-        score += sign * (values[p.type] || 0);
-
-        const center =
-          7 - (Math.abs(3.5-r) + Math.abs(3.5-c));
-
-        if (p.type === "n" || p.type === "b") {
-          score += sign * center * 4;
-        }
-
-        if (p.type === "p") {
-          const advance = p.color === "w" ? 6-r : r-1;
-          score += sign * advance * 5;
+    for(let r=0;r<8;r++){
+      for(let c=0;c<8;c++){
+        const p=board[r][c];
+        if(!p) continue;
+        const sign=p.color===aiColor?1:-1;
+        score+=sign*(values[p.type]||0);
+        const center=7-(Math.abs(3.5-r)+Math.abs(3.5-c));
+        if(p.type==="n" || p.type==="b") score+=sign*center*4;
+        if(p.type==="p"){
+          const advance=p.color==="w"?6-r:r-1;
+          score+=sign*advance*5;
         }
       }
     }
-
     return score;
   }
 
-  function minimax(depth,alpha,beta,maximizingAI) {
-    if (depth <= 0 || game.game_over()) return evaluatePosition();
+  // انتخاب سریع حرکت: از جست‌وجوی عمیق و مسدودشدن تایمر جلوگیری می‌کند.
+  function chooseFastMove(moves){
+    const scored=[];
+    for(const m of moves){
+      game.move({from:m.from,to:m.to,promotion:m.promotion||"q"});
+      let score=evaluatePosition();
 
-    const moves = game.moves({verbose:true});
+      // پاداش کوچک برای گرفتن مهره
+      if(m.captured) score+=values[m.captured]*0.7;
 
-    if (maximizingAI) {
-      let best = -Infinity;
-
-      for (const m of moves) {
-        game.move({
-          from:m.from,to:m.to,promotion:m.promotion || "q"
-        });
-
-        best = Math.max(
-          best,minimax(depth-1,alpha,beta,false)
-        );
-
-        game.undo();
-        alpha = Math.max(alpha,best);
-
-        if (beta <= alpha) break;
-      }
-
-      return best;
-    }
-
-    let best = Infinity;
-
-    for (const m of moves) {
-      game.move({
-        from:m.from,to:m.to,promotion:m.promotion || "q"
-      });
-
-      best = Math.min(
-        best,minimax(depth-1,alpha,beta,true)
-      );
-
-      game.undo();
-      beta = Math.min(beta,best);
-
-      if (beta <= alpha) break;
-    }
-
-    return best;
-  }
-
-  function chooseEasyMove(moves) {
-    const scored = [];
-
-    for (const m of moves) {
-      game.move({
-        from:m.from,to:m.to,promotion:m.promotion || "q"
-      });
-
-      const score =
-        evaluatePosition() + (Math.random()-0.5)*180;
+      // پاداش برای کیش‌دادن
+      if(game.in_check()) score+=35;
 
       game.undo();
       scored.push({move:m,score});
     }
 
-    scored.sort((a,b) => b.score-a.score);
+    scored.sort((a,b)=>b.score-a.score);
 
-    const poolSize = Math.max(1,Math.ceil(scored.length*0.4));
-    const pool = scored.slice(0,poolSize);
-
-    return pool[Math.floor(Math.random()*pool.length)].move;
-  }
-
-  function chooseBulletEasyMove(moves) {
-    const captures = moves.filter(m => m.captured);
-
-    if (captures.length && Math.random() < 0.65) {
-      return captures[Math.floor(Math.random()*captures.length)];
+    if(difficulty==="easy"){
+      const pool=scored.slice(0,Math.max(1,Math.ceil(scored.length*0.45)));
+      return pool[Math.floor(Math.random()*pool.length)].move;
     }
 
-    return moves[Math.floor(Math.random()*moves.length)];
-  }
-
-  function aiMove() {
-    if (!running || finished || game.turn() !== aiColor || mode !== "ai") {
-      return;
+    if(difficulty==="medium"){
+      const pool=scored.slice(0,Math.min(4,scored.length));
+      return pool[Math.floor(Math.random()*pool.length)].move;
     }
 
-    const token = ++aiToken;
+    const bestScore=scored[0].score;
+    const best=scored.filter(item=>item.score>=bestScore-15);
+    return best[Math.floor(Math.random()*best.length)].move;
+  }
+
+  function aiMove(){
+    if(!running || finished || game.turn()!==aiColor || mode!=="ai") return;
+
+    const token=++aiToken;
     updateStatus();
 
-    const isBullet = Number($("timeControl").value) === 60;
-
+    const isBullet=Number($("timeControl").value)===60;
     let delay;
 
-    if (isBullet) {
-      delay = difficulty === "hard"
-        ? 100 + Math.random()*200
-        : 100 + Math.random()*150;
-    } else {
-      if (difficulty === "easy") delay = 2200 + Math.random()*800;
-      else if (difficulty === "medium") delay = 1500 + Math.random()*700;
-      else delay = 1000 + Math.random()*700;
-    }
+    if(isBullet) delay=120+Math.random()*180;
+    else if(difficulty==="easy") delay=900+Math.random()*500;
+    else if(difficulty==="medium") delay=650+Math.random()*450;
+    else delay=450+Math.random()*350;
 
-    setTimeout(() => {
-      if (
-        token !== aiToken || !running || finished ||
-        game.turn() !== aiColor || mode !== "ai"
-      ) return;
+    setTimeout(()=>{
+      if(token!==aiToken || !running || finished || game.turn()!==aiColor || mode!=="ai") return;
 
-      const moves = game.moves({verbose:true});
+      // به‌روزرسانی تایمر قبل از انتخاب حرکت
+      chargeClock();
+      if(finished) return;
 
-      if (!moves.length) {
-        checkGameEnd();
-        return;
-      }
+      const moves=game.moves({verbose:true});
+      if(!moves.length){checkGameEnd();return;}
 
-      let chosen;
-
-      if (isBullet && difficulty === "easy") {
-        chosen = chooseBulletEasyMove(moves);
-      } else if (difficulty === "easy") {
-        chosen = chooseEasyMove(moves);
-      } else {
-        const depth = isBullet
-          ? (difficulty === "hard" ? 2 : 1)
-          : (difficulty === "hard" ? 3 : 2);
-
-        let best = -Infinity;
-        let candidates = [];
-
-        for (const m of moves) {
-          game.move({
-            from:m.from,to:m.to,promotion:m.promotion || "q"
-          });
-
-          const score = minimax(
-            depth-1,-Infinity,Infinity,game.turn() === aiColor
-          );
-
-          game.undo();
-
-          if (score > best) {
-            best = score;
-            candidates = [m];
-          } else if (score === best) {
-            candidates.push(m);
-          }
-        }
-
-        chosen = candidates[Math.floor(Math.random()*candidates.length)];
-      }
-
-      if (chosen) {
+      const chosen=chooseFastMove(moves);
+      if(chosen){
         makeMove({
           from:chosen.from,
           to:chosen.to,
-          promotion:chosen.promotion || "q"
+          promotion:chosen.promotion||"q"
         });
       }
     },delay);
   }
 
-  function checkGameEnd() {
-    if (game.in_checkmate()) {
-      const winner = game.turn() === "w" ? "مشکی" : "سفید";
-
+  function checkGameEnd(){
+    if(game.in_checkmate()){
+      const winner=game.turn()==="w"?"مشکی":"سفید";
       finishGame(
         `کیش‌ومات! ${winner} برنده شد!`,
-        "مهره‌های مهاجم با هالهٔ قرمز مشخص شده‌اند؛ خط‌ها مسیر حمله تا شاه را نشان می‌دهند.",
+        "مهره‌های مهاجم با هالهٔ قرمز مشخص شده‌اند.",
         "checkmate"
       );
-    } else if (game.in_draw()) {
-      finishGame(
-        "بازی مساوی شد!",
-        "هیچ برنده‌ای در این مسابقه وجود نداره.",
-        "draw"
-      );
-    } else if (game.game_over()) {
+    }else if(game.in_draw()){
+      finishGame("بازی مساوی شد!","هیچ برنده‌ای در این مسابقه وجود نداره.","draw");
+    }else if(game.game_over()){
       finishGame("پایان مسابقه","بازی به پایان رسید.","other");
     }
   }
 
-  function finishGame(title,message,reason) {
-    if (finished) return;
+  function finishGame(title,message,reason){
+    if(finished) return;
 
-    finished = true;
-    running = false;
-    turnStartedAt = 0;
+    finished=true;
+    running=false;
+    turnStartedAt=0;
     aiToken++;
 
-    if (clockInterval) {
+    if(clockInterval){
       clearInterval(clockInterval);
-      clockInterval = null;
+      clockInterval=null;
     }
 
-    selectedSquare = null;
-    legalTargets = [];
-
+    selectedSquare=null;
+    legalTargets=[];
     $("promotionModal").classList.add("hidden");
     $("endActions").classList.add("visible");
 
     render();
     renderClocks();
 
-    $("status").textContent = title;
+    $("status").textContent=title;
     $("status").classList.add("result");
 
-    if (reason === "checkmate") {
-      $("resultDetail").textContent =
-        `شاه مات‌شده مشخص است. ${checkingAttackers.length} مهرهٔ مهاجم با هاله و خط قرمز نمایش داده شده${checkingAttackers.length === 1 ? " است" : "اند"}.`;
-    } else {
-      $("resultDetail").textContent = message;
+    if(reason==="checkmate"){
+      $("resultDetail").textContent=
+        `شاه مات‌شده مشخص است؛ ${checkingAttackers.length} مهرهٔ مهاجم با هالهٔ قرمز نمایش داده شده${checkingAttackers.length===1?" است":"اند"}.`;
+    }else{
+      $("resultDetail").textContent=message;
     }
 
-    $("undoBtn").disabled = true;
+    $("undoBtn").disabled=true;
   }
 
-  function beginGame() {
+  function beginGame(){
     aiToken++;
-
-    if (clockInterval) {
+    if(clockInterval){
       clearInterval(clockInterval);
-      clockInterval = null;
+      clockInterval=null;
     }
 
-    game = new Chess();
+    game=new Chess();
+    selectedSquare=null;legalTargets=[];lastMove=null;
+    running=true;finished=false;pendingPromotion=null;clockSnapshots=[];
+    matedSquare=null;checkingAttackers=[];
 
-    selectedSquare = null;
-    legalTargets = [];
-    lastMove = null;
-    running = true;
-    finished = false;
-    pendingPromotion = null;
-    clockSnapshots = [];
-    matedSquare = null;
-    checkingAttackers = [];
+    mode=$("startMode").value;
+    difficulty=$("difficulty").value;
+    humanColor=$("playerColor").value;
+    aiColor=humanColor==="w"?"b":"w";
 
-    mode = $("startMode").value;
-    difficulty = $("difficulty").value;
-    humanColor = $("playerColor").value;
-    aiColor = humanColor === "w" ? "b" : "w";
+    const t=Number($("timeControl").value);
+    timed=t!==0;
 
-    const t = Number($("timeControl").value);
-    timed = t !== 0;
+    if(t===182){baseSeconds=180;incrementSeconds=2;}
+    else if(t===303){baseSeconds=300;incrementSeconds=3;}
+    else if(t===910){baseSeconds=900;incrementSeconds=10;}
+    else{baseSeconds=t;incrementSeconds=0;}
 
-    if (t === 182) {
-      baseSeconds = 180;
-      incrementSeconds = 2;
-    } else if (t === 303) {
-      baseSeconds = 300;
-      incrementSeconds = 3;
-    } else if (t === 910) {
-      baseSeconds = 900;
-      incrementSeconds = 10;
-    } else {
-      baseSeconds = t;
-      incrementSeconds = 0;
-    }
+    whiteSeconds=baseSeconds;
+    blackSeconds=baseSeconds;
+    activeClock="w";
+    turnStartedAt=now();
+    flipped=mode==="ai" && humanColor==="b";
 
-    whiteSeconds = baseSeconds;
-    blackSeconds = baseSeconds;
-    activeClock = "w";
-    turnStartedAt = now();
-    flipped = mode === "ai" && humanColor === "b";
-
-    const label = getTimeLabel(t);
-    $("whiteTimeLabel").textContent = label;
-    $("blackTimeLabel").textContent = label;
+    const label=getTimeLabel(t);
+    $("whiteTimeLabel").textContent=label;
+    $("blackTimeLabel").textContent=label;
 
     $("setupOverlay").classList.add("hidden");
     $("promotionModal").classList.add("hidden");
     $("endActions").classList.remove("visible");
-
     $("status").classList.remove("result");
-    $("resultDetail").textContent = "";
+    $("resultDetail").textContent="";
 
-    $("whiteName").textContent = mode === "ai"
-      ? (humanColor === "w" ? "شما · سفید" : "هوش مصنوعی · سفید")
+    $("whiteName").textContent=mode==="ai"
+      ? (humanColor==="w"?"شما · سفید":"هوش مصنوعی · سفید")
       : "بازیکن اول · سفید";
-
-    $("blackName").textContent = mode === "ai"
-      ? (humanColor === "b" ? "شما · مشکی" : "هوش مصنوعی · مشکی")
+    $("blackName").textContent=mode==="ai"
+      ? (humanColor==="b"?"شما · مشکی":"هوش مصنوعی · مشکی")
       : "بازیکن دوم · مشکی";
 
-    $("whiteSub").textContent =
-      mode === "ai" && aiColor === "w"
-        ? "درجه سختی: " +
-          ({easy:"آسان",medium:"متوسط",hard:"سخت"}[difficulty])
-        : "مهره‌های سفید";
-
-    $("blackSub").textContent =
-      mode === "ai" && aiColor === "b"
-        ? "درجه سختی: " +
-          ({easy:"آسان",medium:"متوسط",hard:"سخت"}[difficulty])
-        : "مهره‌های مشکی";
+    const diffName={easy:"آسان",medium:"متوسط",hard:"سخت"};
+    $("whiteSub").textContent=mode==="ai" && aiColor==="w"
+      ? "درجه سختی: "+diffName[difficulty] : "مهره‌های سفید";
+    $("blackSub").textContent=mode==="ai" && aiColor==="b"
+      ? "درجه سختی: "+diffName[difficulty] : "مهره‌های مشکی";
 
     render();
 
-    clockInterval = setInterval(() => {
-      if (!running || finished || !timed) return;
+    // تایمر مستقل از نوبت هوش مصنوعی هر 100 میلی‌ثانیه به‌روز می‌شود.
+    clockInterval=setInterval(()=>{
+      if(!running || finished || !timed) return;
       chargeClock();
       renderClocks();
     },100);
 
-    if (mode === "ai" && game.turn() === aiColor) {
-      aiMove();
-    }
+    if(mode==="ai" && game.turn()===aiColor) aiMove();
   }
 
-  function undoMove() {
-    if (!game.history().length || pendingPromotion || !running) return;
+  function undoMove(){
+    if(!game.history().length || pendingPromotion || !running) return;
 
     aiToken++;
     $("promotionModal").classList.add("hidden");
-    pendingPromotion = null;
+    pendingPromotion=null;
 
     chargeClock();
-    if (finished) return;
+    if(finished) return;
 
-    const count = mode === "ai" &&
-      game.turn() === humanColor &&
-      game.history().length >= 2 ? 2 : 1;
+    const count=mode==="ai" && game.turn()===humanColor && game.history().length>=2?2:1;
+    let snapshot=null;
 
-    let snapshot = null;
-
-    for (let i = 0; i < count; i++) {
-      if (!game.history().length) break;
-
-      const previous = clockSnapshots.pop();
-      if (previous) snapshot = previous;
-
+    for(let i=0;i<count;i++){
+      if(!game.history().length) break;
+      const previous=clockSnapshots.pop();
+      if(previous) snapshot=previous;
       game.undo();
     }
 
-    if (snapshot) {
-      whiteSeconds = snapshot.white;
-      blackSeconds = snapshot.black;
+    if(snapshot){
+      whiteSeconds=snapshot.white;
+      blackSeconds=snapshot.black;
     }
 
-    finished = false;
-    running = true;
-    matedSquare = null;
-    checkingAttackers = [];
-
+    finished=false;running=true;
+    matedSquare=null;checkingAttackers=[];
     $("endActions").classList.remove("visible");
     $("status").classList.remove("result");
-    $("resultDetail").textContent = "";
+    $("resultDetail").textContent="";
+    selectedSquare=null;legalTargets=[];
 
-    selectedSquare = null;
-    legalTargets = [];
-
-    const hist = game.history({verbose:true});
-
-    lastMove = hist.length
+    const hist=game.history({verbose:true});
+    lastMove=hist.length
       ? {from:hist[hist.length-1].from,to:hist[hist.length-1].to}
       : null;
 
-    activeClock = game.turn();
-    turnStartedAt = now();
-
+    activeClock=game.turn();
+    turnStartedAt=now();
     render();
 
-    if (clockInterval) clearInterval(clockInterval);
-
-    clockInterval = setInterval(() => {
-      if (!running || finished || !timed) return;
+    if(clockInterval) clearInterval(clockInterval);
+    clockInterval=setInterval(()=>{
+      if(!running || finished || !timed) return;
       chargeClock();
       renderClocks();
     },100);
 
-    if (mode === "ai" && game.turn() === aiColor) {
-      aiMove();
-    }
+    if(mode==="ai" && game.turn()===aiColor) aiMove();
   }
 
-  function showSetup() {
-    running = false;
-    finished = false;
-    aiToken++;
-    turnStartedAt = 0;
+  function showSetup(){
+    running=false;finished=false;aiToken++;turnStartedAt=0;
 
-    if (clockInterval) {
+    if(clockInterval){
       clearInterval(clockInterval);
-      clockInterval = null;
+      clockInterval=null;
     }
 
-    matedSquare = null;
-    checkingAttackers = [];
-
+    matedSquare=null;checkingAttackers=[];
     $("promotionModal").classList.add("hidden");
     $("setupOverlay").classList.remove("hidden");
     $("endActions").classList.remove("visible");
-
     $("status").classList.remove("result");
-    $("resultDetail").textContent = "";
-
+    $("resultDetail").textContent="";
     renderClocks();
   }
 
-  function syncModeFields() {
-    const isAI = $("startMode").value === "ai";
-
+  function syncModeFields(){
+    const isAI=$("startMode").value==="ai";
     $("difficultyField").classList.toggle("hidden",!isAI);
     $("playerColorField").classList.toggle("hidden",!isAI);
   }
@@ -1416,12 +945,10 @@ function initializeChess() {
   $("overlayStartBtn").addEventListener("click",beginGame);
   $("newBtn").addEventListener("click",showSetup);
   $("undoBtn").addEventListener("click",undoMove);
-
-  $("flipBtn").addEventListener("click",() => {
-    flipped = !flipped;
+  $("flipBtn").addEventListener("click",()=>{
+    flipped=!flipped;
     render();
   });
-
   $("startMode").addEventListener("change",syncModeFields);
   $("restartBtn").addEventListener("click",beginGame);
   $("settingsBtn").addEventListener("click",showSetup);
