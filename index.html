@@ -1,83 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#10151f">
 <title>Taha Chess</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;padding:20px 12px 30px;background:#10151f;color:#f4f6fa;
- font-family:Tahoma,Arial,sans-serif;text-align:center
-}
+body{margin:0;padding:16px 12px 30px;background:#10151f;color:#f4f6fa;font-family:Tahoma,Arial,sans-serif;text-align:center}
 .app{max-width:480px;margin:auto}
-h1{margin:5px;color:#d9edbd;font-size:29px}
-.sub{color:#9baac0;font-size:13px;margin:8px 0 20px}
-.top{
- display:flex;justify-content:space-between;align-items:center;gap:8px;
- background:#1b2432;padding:13px;border-radius:13px;margin-bottom:12px
-}
-#status{font-size:13px;text-align:right}
-.tag{color:#c4e88d;font-size:11px;white-space:nowrap}
-.board{
- display:grid;grid-template-columns:repeat(8,1fr);width:100%;
- aspect-ratio:1;border:5px solid #29374a;border-radius:8px;
- overflow:hidden;direction:ltr;box-shadow:0 12px 35px #0006
-}
-.square{
- border:0;margin:0;padding:0;position:relative;
- display:flex;align-items:center;justify-content:center;
- aspect-ratio:1;font-family:Arial,sans-serif;
- font-size:clamp(27px,8vw,45px);cursor:pointer;
- touch-action:manipulation;user-select:none
-}
-.light{background:#e7e2d4}
-.dark{background:#748c7c}
+h1{margin:5px;color:#d9edbd;font-size:28px}
+.sub{color:#9baac0;font-size:12px;margin:8px 0 16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1b2432;padding:12px;border-radius:13px;margin-bottom:10px}
+#status{font-size:12px;text-align:right}
+.tag{color:#c4e88d;font-size:10px;white-space:nowrap}
+.clocks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.clock{background:#1b2432;border:2px solid #2b3b50;border-radius:13px;padding:10px 8px;text-align:center}
+.clock small{display:block;color:#aab7c9;font-size:11px;margin-bottom:5px}
+.clock strong{font-size:25px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.clock.active{border-color:#b7f34a;background:#253226}
+.clock.low strong{color:#ff6976}
+.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border:5px solid #29374a;border-radius:8px;overflow:hidden;direction:ltr;box-shadow:0 12px 35px #0006}
+.square{border:0;margin:0;padding:0;position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;font-family:Arial,sans-serif;font-size:clamp(27px,8vw,45px);cursor:pointer;touch-action:manipulation;user-select:none}
+.light{background:#e7e2d4}.dark{background:#748c7c}
 .square.selected{background:#e8d36d!important}
 .square.last{background:#baca65}
-.square.hint:after{
- content:"";position:absolute;width:24%;height:24%;
- border-radius:50%;background:#253b348c
-}
-.square.capture:after{
- content:"";position:absolute;inset:3px;border:4px solid #b34d58;
- border-radius:50%
-}
+.square.hint:after{content:"";position:absolute;width:24%;height:24%;border-radius:50%;background:#253b348c}
+.square.capture:after{content:"";position:absolute;inset:3px;border:4px solid #b34d58;border-radius:50%}
 .piece.white{color:#fff;text-shadow:1px 2px 2px #222,0 0 2px #222}
 .piece.black{color:#20242c;text-shadow:0 1px 1px #fff6}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
-button.action,select{
- background:#263346;color:#f5f7fb;border:1px solid #3c4b60;
- padding:12px 8px;border-radius:11px;font-size:13px;cursor:pointer
-}
-button.action:active{transform:scale(.98)}
-select{width:100%;margin-top:10px}
-.history{margin-top:14px;background:#1b2432;border-radius:13px;padding:13px;text-align:right}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+button,select{font-family:inherit}
+.action,.mode-select{background:#263346;color:#f5f7fb;border:1px solid #3c4b60;padding:12px 8px;border-radius:11px;font-size:13px;cursor:pointer}
+.action:disabled{opacity:.45}
+.mode-select{width:100%;margin-top:9px}
+.history{margin-top:13px;background:#1b2432;border-radius:13px;padding:13px;text-align:right}
 .history h3{margin:0 0 8px;font-size:13px;color:#d9edbd}
 #moves{font-size:12px;color:#c1ccda;line-height:2;overflow-wrap:anywhere}
-footer{color:#718096;font-size:11px;margin-top:18px}
-
-/* پنجره انتخاب مهره */
-.modal{
- display:none;position:fixed;inset:0;background:#000c;z-index:99;
- align-items:center;justify-content:center;padding:18px
-}
-.modal-card{
- background:#1b2432;border:1px solid #3b4c63;border-radius:20px;
- padding:22px 16px;width:100%;max-width:340px;
- box-shadow:0 15px 50px #0009
-}
-.modal-card h2{font-size:20px;color:#d9edbd;margin:0 0 9px}
-.modal-card p{font-size:13px;color:#b9c6d7;line-height:1.8}
+footer{color:#718096;font-size:11px;margin-top:16px}
+.overlay{position:fixed;inset:0;z-index:100;background:#080d16eF;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.overlay.hidden{display:none}
+.dialog{width:100%;max-width:370px;background:#1b2432;border:1px solid #3b4c63;border-radius:21px;padding:22px 18px;box-shadow:0 15px 50px #0009;text-align:right}
+.dialog h2{text-align:center;color:#d9edbd;margin:0 0 7px;font-size:24px}
+.dialog .intro{text-align:center;color:#aab7c9;font-size:12px;line-height:1.8;margin:0 0 18px}
+.field{margin:13px 0}
+.field label{display:block;font-size:12px;color:#e0e7f0;margin-bottom:7px}
+.field select{width:100%;padding:12px;background:#101a29;color:#fff;border:1px solid #40516a;border-radius:10px;font-size:14px}
+.start-btn{width:100%;margin-top:12px;background:#b7f34a;color:#18210e;border:0;border-radius:12px;padding:14px;font-weight:bold;font-size:16px;cursor:pointer}
+.secondary-btn{width:100%;margin-top:9px;background:#263346;color:#fff;border:1px solid #40516a;border-radius:12px;padding:12px;cursor:pointer}
+.note{font-size:11px;line-height:1.8;color:#93a3b9;margin-top:12px}
 .promotion-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
-.promo-btn{
- background:#e7e2d4;color:#20242c;border:3px solid transparent;
- border-radius:12px;padding:8px 2px;cursor:pointer
-}
-.promo-btn:active{border-color:#b7f34a}
+.promo-btn{background:#e7e2d4;color:#20242c;border:3px solid transparent;border-radius:12px;padding:8px 2px;cursor:pointer}
 .promo-symbol{display:block;font-size:39px;line-height:1.2}
 .promo-name{display:block;font-size:11px;margin-top:5px}
 @media(min-width:500px){.square{font-size:44px}}
@@ -86,10 +60,19 @@ footer{color:#718096;font-size:11px;margin-top:18px}
 <body>
 <div class="app">
  <h1>♟ TAHA CHESS</h1>
- <div class="sub">فکر کن، حرکت کن، برنده شو.</div>
+ <div class="sub">انتخاب کن، فکر کن، برنده شو.</div>
+
+ <div class="clocks">
+  <div class="clock" id="blackClock">
+   <small>سیاه ⚫</small><strong id="blackTime">10:00</strong>
+  </div>
+  <div class="clock active" id="whiteClock">
+   <small>سفید ⚪ · تو</small><strong id="whiteTime">10:00</strong>
+  </div>
+ </div>
 
  <div class="top">
-  <div id="status">در حال آماده‌سازی...</div>
+  <div id="status">برای شروع بازی تنظیمات رو انتخاب کن.</div>
   <div class="tag">♛ CHESS ARENA</div>
  </div>
 
@@ -100,42 +83,80 @@ footer{color:#718096;font-size:11px;margin-top:18px}
   <button class="action" id="newBtn">🔄 بازی جدید</button>
  </div>
 
- <select id="mode">
+ <select class="mode-select" id="mode">
   <option value="ai">🤖 بازی با کامپیوتر</option>
   <option value="two">👥 بازی دونفره</option>
  </select>
 
  <div class="history">
-  <h3>📜 تاریخچه حرکات</h3>
+  <h3>📜 تاریخچهٔ حرکات</h3>
   <div id="moves">هنوز حرکتی انجام نشده.</div>
  </div>
-
- <footer>TAHA CHESS · موفق باشی! ♟️</footer>
+ <footer>TAHA CHESS · رکوردت رو بشکن! ♟️</footer>
 </div>
 
-<!-- پنجره انتخاب مهره برای ارتقای سرباز -->
-<div class="modal" id="promotionModal">
- <div class="modal-card">
-  <h2>سربازت به آخر رسید! 🎉</h2>
-  <p>انتخاب کن سربازت به چه مهره‌ای تبدیل بشه:</p>
-  <div class="promotion-options">
-   <button class="promo-btn" data-piece="q">
-    <span class="promo-symbol" id="promoQ">♕</span>
-    <span class="promo-name">وزیر</span>
-   </button>
-   <button class="promo-btn" data-piece="r">
-    <span class="promo-symbol" id="promoR">♖</span>
-    <span class="promo-name">رخ</span>
-   </button>
-   <button class="promo-btn" data-piece="b">
-    <span class="promo-symbol" id="promoB">♗</span>
-    <span class="promo-name">فیل</span>
-   </button>
-   <button class="promo-btn" data-piece="n">
-    <span class="promo-symbol" id="promoN">♘</span>
-    <span class="promo-name">اسب</span>
-   </button>
+<!-- منوی شروع بازی -->
+<div class="overlay" id="setupOverlay">
+ <div class="dialog">
+  <h2>♟ Taha Chess</h2>
+  <p class="intro">تنظیمات بازی رو انتخاب کن و آمادهٔ مسابقه شو!</p>
+
+  <div class="field">
+   <label for="difficulty">🎯 سختی کامپیوتر</label>
+   <select id="difficulty">
+    <option value="1">آسون · برای تمرین</option>
+    <option value="2" selected>متوسط · رقابت نزدیک</option>
+    <option value="3">سخت · چالش جدی</option>
+   </select>
   </div>
+
+  <div class="field">
+   <label for="timeControl">⏱️ زمان هر بازیکن</label>
+   <select id="timeControl">
+    <option value="60,0">۱ دقیقه · Bullet</option>
+    <option value="180,0">۳ دقیقه · Blitz</option>
+    <option value="180,2">۳ دقیقه + ۲ ثانیه اضافه</option>
+    <option value="300,0">۵ دقیقه · Blitz</option>
+    <option value="300,3">۵ دقیقه + ۳ ثانیه اضافه</option>
+    <option value="600,0" selected>۱۰ دقیقه · Rapid</option>
+    <option value="900,10">۱۵ دقیقه + ۱۰ ثانیه اضافه</option>
+   </select>
+  </div>
+
+  <div class="field">
+   <label for="startMode">👥 نوع مسابقه</label>
+   <select id="startMode">
+    <option value="ai">بازی با کامپیوتر</option>
+    <option value="two">بازی دونفره روی یک دستگاه</option>
+   </select>
+  </div>
+
+  <button class="start-btn" id="startBtn">شروع مسابقه 🚀</button>
+  <p class="note">زمان هر بازیکن جداگانه حساب می‌شه. در حالت کامپیوتر، سطح سختی روی قدرت جست‌وجوی حرکت‌ها اثر می‌ذاره.</p>
+ </div>
+</div>
+
+<!-- پنجرهٔ انتخاب مهره -->
+<div class="overlay hidden" id="promotionModal">
+ <div class="dialog">
+  <h2>سربازت به آخر رسید! 🎉</h2>
+  <p class="intro">انتخاب کن سربازت به چه مهره‌ای تبدیل بشه.</p>
+  <div class="promotion-options">
+   <button class="promo-btn" data-piece="q"><span class="promo-symbol" id="promoQ">♕</span><span class="promo-name">وزیر</span></button>
+   <button class="promo-btn" data-piece="r"><span class="promo-symbol" id="promoR">♖</span><span class="promo-name">رخ</span></button>
+   <button class="promo-btn" data-piece="b"><span class="promo-symbol" id="promoB">♗</span><span class="promo-name">فیل</span></button>
+   <button class="promo-btn" data-piece="n"><span class="promo-symbol" id="promoN">♘</span><span class="promo-name">اسب</span></button>
+  </div>
+ </div>
+</div>
+
+<!-- پایان مسابقه -->
+<div class="overlay hidden" id="endOverlay">
+ <div class="dialog">
+  <h2 id="endTitle">پایان بازی</h2>
+  <p class="intro" id="endText"></p>
+  <button class="start-btn" id="againBtn">بازی جدید 🔄</button>
+  <button class="secondary-btn" id="closeEndBtn">دیدن صفحهٔ شطرنج</button>
  </div>
 </div>
 
@@ -143,31 +164,89 @@ footer{color:#718096;font-size:11px;margin-top:18px}
 (function(){
 'use strict';
 
-const boardEl=document.getElementById('board');
-const statusEl=document.getElementById('status');
-const movesEl=document.getElementById('moves');
-const modal=document.getElementById('promotionModal');
-const modeEl=document.getElementById('mode');
+const $=id=>document.getElementById(id);
+const boardEl=$('board'),statusEl=$('status'),movesEl=$('moves');
+const setupOverlay=$('setupOverlay'),promotionModal=$('promotionModal'),endOverlay=$('endOverlay');
+const game=new Chess();
 
 if(typeof Chess==='undefined'){
- statusEl.textContent='کتابخانه شطرنج بارگذاری نشد؛ اینترنت را بررسی کن.';
+ statusEl.textContent='کتابخانهٔ شطرنج بارگذاری نشد؛ اینترنت را بررسی کن.';
  boardEl.style.display='none';
  throw new Error('chess.js failed to load');
 }
-
-const game=new Chess();
 
 const symbols={
  wk:'♔',wq:'♕',wr:'♖',wb:'♗',wn:'♘',wp:'♙',
  bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟'
 };
 
-let selected=null;
-let targets=[];
-let lastMove=null;
-let thinking=false;
-let pendingPromotion=null;
-let gameToken=0;
+let selected=null,targets=[],lastMove=null,thinking=false;
+let pendingPromotion=null,gameToken=0,gameActive=false;
+let difficulty=2,baseSeconds=600,incrementSeconds=0;
+let whiteRemaining=600000,blackRemaining=600000;
+let lastClockUpdate=0,timerId=null;
+
+function formatTime(ms){
+ ms=Math.max(0,ms);
+ const total=Math.ceil(ms/1000);
+ const minutes=Math.floor(total/60);
+ const seconds=total%60;
+ return String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0');
+}
+
+function updateClocks(){
+ $('whiteTime').textContent=formatTime(whiteRemaining);
+ $('blackTime').textContent=formatTime(blackRemaining);
+ $('whiteClock').classList.toggle('active',gameActive&&game.turn()==='w');
+ $('blackClock').classList.toggle('active',gameActive&&game.turn()==='b');
+ $('whiteClock').classList.toggle('low',whiteRemaining<=10000);
+ $('blackClock').classList.toggle('low',blackRemaining<=10000);
+}
+
+function stopTimer(){
+ if(timerId!==null)clearInterval(timerId);
+ timerId=null;
+}
+
+function tickClock(){
+ if(!gameActive)return;
+ const now=Date.now();
+ const delta=Math.max(0,now-lastClockUpdate);
+ lastClockUpdate=now;
+
+ if(game.turn()==='w')whiteRemaining-=delta;
+ else blackRemaining-=delta;
+
+ if(whiteRemaining<=0){
+  whiteRemaining=0;
+  gameActive=false;
+  stopTimer();
+  updateClocks();
+  finishGame('زمان سفید تمام شد! سیاه برنده شد. ⏰');
+  return;
+ }
+ if(blackRemaining<=0){
+  blackRemaining=0;
+  gameActive=false;
+  stopTimer();
+  updateClocks();
+  finishGame('زمان سیاه تمام شد! سفید برنده شد. ⏰');
+  return;
+ }
+ updateClocks();
+}
+
+function startTimer(){
+ stopTimer();
+ lastClockUpdate=Date.now();
+ timerId=setInterval(tickClock,100);
+}
+
+function addIncrement(color){
+ const add=incrementSeconds*1000;
+ if(color==='w')whiteRemaining+=add;
+ else blackRemaining+=add;
+}
 
 function render(){
  boardEl.innerHTML='';
@@ -181,10 +260,7 @@ function render(){
 
    cell.className='square '+((r+c)%2===0?'light':'dark');
    cell.setAttribute('aria-label',square);
-
-   if(lastMove&&(square===lastMove.from||square===lastMove.to)){
-    cell.classList.add('last');
-   }
+   if(lastMove&&(square===lastMove.from||square===lastMove.to))cell.classList.add('last');
    if(square===selected)cell.classList.add('selected');
 
    const target=targets.find(m=>m.to===square);
@@ -203,6 +279,7 @@ function render(){
  }
  updateStatus();
  updateHistory();
+ updateClocks();
 }
 
 function updateStatus(){
@@ -212,6 +289,8 @@ function updateStatus(){
   statusEl.textContent='بازی مساوی شد 🤝';
  }else if(game.in_check()){
   statusEl.textContent='کیش! نوبت '+(game.turn()==='w'?'سفید':'سیاه');
+ }else if(!gameActive){
+  statusEl.textContent='بازی متوقف است؛ بازی جدید رو بزن.';
  }else if(thinking){
   statusEl.textContent='کامپیوتر فکر می‌کند...';
  }else{
@@ -227,39 +306,33 @@ function updateHistory(){
  }
  const rows=[];
  for(let i=0;i<history.length;i+=2){
-  rows.push((Math.floor(i/2)+1)+'. '+history[i]+
-   (history[i+1]?'  '+history[i+1]:''));
+  rows.push((Math.floor(i/2)+1)+'. '+history[i]+(history[i+1]?'  '+history[i+1]:''));
  }
  movesEl.textContent=rows.join(' | ');
 }
 
 function tapSquare(square){
- if(thinking||game.game_over()||pendingPromotion)return;
-
- if(modeEl.value==='ai'&&game.turn()==='b')return;
+ if(!gameActive||thinking||game.game_over()||pendingPromotion)return;
+ if($('mode').value==='ai'&&game.turn()==='b')return;
 
  const piece=game.get(square);
 
  if(selected){
   const possible=targets.filter(m=>m.to===square);
-
   if(possible.length){
-   // اگر چند حرکت به خانه مقصد وجود داشته باشد و سرباز در حال ارتقا باشد،
-   // کاربر باید نوع مهره را انتخاب کند.
    const promotionMove=possible.find(m=>m.promotion);
-
    if(promotionMove){
     pendingPromotion={from:selected,to:square,token:gameToken};
     showPromotionChoices(game.turn());
     return;
    }
 
+   const mover=game.turn();
    const result=game.move({from:selected,to:square});
-
    if(result){
     lastMove={from:result.from,to:result.to};
-    selected=null;
-    targets=[];
+    addIncrement(mover);
+    selected=null;targets=[];
     render();
     afterHumanMove();
     return;
@@ -271,72 +344,60 @@ function tapSquare(square){
   selected=square;
   targets=game.moves({square:square,verbose:true});
  }else{
-  selected=null;
-  targets=[];
+  selected=null;targets=[];
  }
  render();
 }
 
 function showPromotionChoices(color){
- const white=color==='w';
- const glyphs=white
-  ?{q:'♕',r:'♖',b:'♗',n:'♘'}
-  :{q:'♛',r:'♜',b:'♝',n:'♞'};
-
- document.getElementById('promoQ').textContent=glyphs.q;
- document.getElementById('promoR').textContent=glyphs.r;
- document.getElementById('promoB').textContent=glyphs.b;
- document.getElementById('promoN').textContent=glyphs.n;
-
- modal.style.display='flex';
+ const glyphs=color==='w'
+ ?{q:'♕',r:'♖',b:'♗',n:'♘'}
+ :{q:'♛',r:'♜',b:'♝',n:'♞'};
+ $('promoQ').textContent=glyphs.q;
+ $('promoR').textContent=glyphs.r;
+ $('promoB').textContent=glyphs.b;
+ $('promoN').textContent=glyphs.n;
+ promotionModal.classList.remove('hidden');
 }
 
 document.querySelectorAll('.promo-btn').forEach(button=>{
- button.addEventListener('click',()=>{
-  finishPromotion(button.dataset.piece);
- });
+ button.addEventListener('click',()=>finishPromotion(button.dataset.piece));
 });
 
 function finishPromotion(pieceType){
- if(!pendingPromotion)return;
-
+ if(!pendingPromotion||!gameActive)return;
  const pending=pendingPromotion;
  pendingPromotion=null;
- modal.style.display='none';
+ promotionModal.classList.add('hidden');
 
- if(pending.token!==gameToken){
-  selected=null;
-  targets=[];
-  render();
-  return;
- }
+ if(pending.token!==gameToken){selected=null;targets=[];render();return;}
 
- const result=game.move({
-  from:pending.from,
-  to:pending.to,
-  promotion:pieceType
- });
-
- selected=null;
- targets=[];
+ const mover=game.turn();
+ const result=game.move({from:pending.from,to:pending.to,promotion:pieceType});
+ selected=null;targets=[];
 
  if(result){
   lastMove={from:result.from,to:result.to};
+  addIncrement(mover);
   render();
   afterHumanMove();
- }else{
-  render();
- }
+ }else render();
 }
 
 function afterHumanMove(){
- if(!game.game_over()&&modeEl.value==='ai'&&game.turn()==='b'){
+ if(game.game_over()){
+  gameActive=false;stopTimer();render();
+  finishGame(game.in_checkmate()
+   ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
+   :'بازی مساوی شد. 🤝');
+  return;
+ }
+
+ if($('mode').value==='ai'&&game.turn()==='b'){
   thinking=true;
   updateStatus();
   const token=gameToken;
-  setTimeout(()=>{
-   if(token===gameToken&&thinking)aiMove(token);
-  },350);
+  setTimeout(()=>{if(token===gameToken&&thinking&&gameActive)aiMove(token);},250);
  }
 }
 
@@ -350,29 +411,19 @@ function evaluatePosition(){
   for(let c=0;c<8;c++){
    const p=position[r][c];
    if(!p)continue;
-
    let value=values[p.type];
    const advance=p.color==='w'?(6-r):(r-1);
    if(p.type==='p')value+=advance*8;
-
-   // کنترل مرکز صفحه ارزش کوچکی دارد.
    if(c>=2&&c<=5&&r>=2&&r<=5)value+=8;
-
    score+=(p.color==='b'?value:-value);
   }
  }
-
  if(game.in_check())score+=(game.turn()==='w'?80:-80);
  return score;
 }
 
-/*
-  کامپیوتر با بررسی چند حرکت آینده انتخاب می‌کند.
-  این موتور آموزشی است و قدرتش با Stockfish برابر نیست.
-*/
 function minimax(depth,alpha,beta,maximizing){
  if(game.game_over()||depth===0)return evaluatePosition();
-
  const moves=game.moves({verbose:true});
  if(!moves.length)return evaluatePosition();
 
@@ -398,94 +449,126 @@ function minimax(depth,alpha,beta,maximizing){
    if(beta<=alpha)break;
   }
   return best;
- }
 }
 
 function aiMove(token){
- if(token!==gameToken||game.game_over()){
-  thinking=false;
-  render();
-  return;
+ if(token!==gameToken||!gameActive||game.game_over()){
+  thinking=false;render();return;
  }
 
  const moves=game.moves({verbose:true});
- if(!moves.length){
-  thinking=false;
-  render();
-  return;
- }
+ if(!moves.length){thinking=false;render();return;}
 
- let best=-Infinity;
- let candidates=[];
+ let best=-Infinity,candidates=[];
+ // سطح سختی تعیین می‌کند چند حرکت آینده بررسی شود.
+ const depth=Number(difficulty);
 
- // عمق محدود برای تعادل سرعت و قدرت در موبایل
  for(const m of moves){
   game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
-  const score=minimax(2,-Infinity,Infinity,false);
+  const score=minimax(depth,-Infinity,Infinity,false);
   game.undo();
 
   const adjusted=score+(Math.random()*8);
-  if(adjusted>best){
-   best=adjusted;
-   candidates=[m];
-  }else if(adjusted>=best-10){
-   candidates.push(m);
-  }
+  if(adjusted>best){best=adjusted;candidates=[m];}
+  else if(adjusted>=best-10)candidates.push(m);
  }
 
  const chosen=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];
-
+ const mover=game.turn();
  const result=game.move({
-  from:chosen.from,
-  to:chosen.to,
-  promotion:chosen.promotion||'q'
+  from:chosen.from,to:chosen.to,promotion:chosen.promotion||'q'
  });
 
- if(result)lastMove={from:result.from,to:result.to};
+ if(result){
+  lastMove={from:result.from,to:result.to};
+  addIncrement(mover);
+ }
 
  thinking=false;
- selected=null;
- targets=[];
+ selected=null;targets=[];
  render();
+
+ if(game.game_over()){
+  gameActive=false;stopTimer();
+  finishGame(game.in_checkmate()
+   ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
+   :'بازی مساوی شد. 🤝');
+ }
+}
+
+function finishGame(message){
+ gameActive=false;
+ thinking=false;
+ stopTimer();
+ updateClocks();
+ updateStatus();
+ $('endText').textContent=message;
+ endOverlay.classList.remove('hidden');
+}
+
+function beginGame(){
+ gameToken++;
+ game.reset();
+ selected=null;targets=[];lastMove=null;thinking=false;
+ pendingPromotion=null;
+ promotionModal.classList.add('hidden');
+ endOverlay.classList.add('hidden');
+
+ difficulty=Number($('difficulty').value);
+ const time=$('timeControl').value.split(',').map(Number);
+ baseSeconds=time[0];
+ incrementSeconds=time[1];
+ whiteRemaining=baseSeconds*1000;
+ blackRemaining=baseSeconds*1000;
+
+ $('mode').value=$('startMode').value;
+ gameActive=true;
+ setupOverlay.classList.add('hidden');
+ render();
+ startTimer();
 }
 
 function undoMove(){
- if(thinking||pendingPromotion||!game.history().length)return;
+ if(!gameActive||thinking||pendingPromotion||!game.history().length)return;
+ stopTimer();
 
- game.undo();
+ const before=game.history({verbose:true});
+ const undone=game.undo();
+ if(undone)addIncrement('w'); // ساعت باقیمانده در حرکت برگشتی را دست‌کاری نمی‌کنیم.
 
- // در حالت کامپیوتر، حرکت قبلی انسان را هم برمی‌گردانیم.
- if(modeEl.value==='ai'&&game.history().length){
+ if($('mode').value==='ai'&&game.history().length&&game.turn()==='b'){
   game.undo();
  }
 
  const history=game.history({verbose:true});
  lastMove=history.length
-  ?{from:history[history.length-1].from,to:history[history.length-1].to}
-  :null;
-
- selected=null;
- targets=[];
+ ?{from:history[history.length-1].from,to:history[history.length-1].to}:null;
+ selected=null;targets=[];
  render();
+ startTimer();
 }
 
-function newGame(){
+function showSetup(){
+ gameActive=false;thinking=false;pendingPromotion=null;
  gameToken++;
- game.reset();
- selected=null;
- targets=[];
- lastMove=null;
- thinking=false;
- pendingPromotion=null;
- modal.style.display='none';
- render();
+ stopTimer();
+ promotionModal.classList.add('hidden');
+ endOverlay.classList.add('hidden');
+ setupOverlay.classList.remove('hidden');
 }
 
-document.getElementById('undoBtn').addEventListener('click',undoMove);
-document.getElementById('newBtn').addEventListener('click',newGame);
-modeEl.addEventListener('change',newGame);
+$('startBtn').addEventListener('click',beginGame);
+$('newBtn').addEventListener('click',showSetup);
+$('undoBtn').addEventListener('click',undoMove);
+$('againBtn').addEventListener('click',showSetup);
+$('closeEndBtn').addEventListener('click',()=>endOverlay.classList.add('hidden'));
+
+$('mode').addEventListener('change',()=>{
+ $('startMode').value=$('mode').value;
+});
 
 render();
+updateClocks();
 })();
 </script>
 </body>
