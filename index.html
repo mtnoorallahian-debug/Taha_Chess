@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -39,7 +40,7 @@ button,select{font-family:inherit}
 .history h3{margin:0 0 8px;font-size:13px;color:#d9edbd}
 #moves{font-size:12px;color:#c1ccda;line-height:2;overflow-wrap:anywhere}
 footer{color:#718096;font-size:11px;margin-top:16px}
-.overlay{position:fixed;inset:0;z-index:100;background:#080d16eF;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.overlay{position:fixed;inset:0;z-index:100;background:#080d16ef;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
 .overlay.hidden{display:none}
 .dialog{width:100%;max-width:370px;background:#1b2432;border:1px solid #3b4c63;border-radius:21px;padding:22px 18px;box-shadow:0 15px 50px #0009;text-align:right}
 .dialog h2{text-align:center;color:#d9edbd;margin:0 0 7px;font-size:24px}
@@ -95,7 +96,6 @@ footer{color:#718096;font-size:11px;margin-top:16px}
  <footer>TAHA CHESS · رکوردت رو بشکن! ♟️</footer>
 </div>
 
-<!-- منوی شروع بازی -->
 <div class="overlay" id="setupOverlay">
  <div class="dialog">
   <h2>♟ Taha Chess</h2>
@@ -131,32 +131,30 @@ footer{color:#718096;font-size:11px;margin-top:16px}
    </select>
   </div>
 
-  <button class="start-btn" id="startBtn">شروع مسابقه 🚀</button>
+  <button type="button" class="start-btn" id="startBtn">شروع مسابقه 🚀</button>
   <p class="note">زمان هر بازیکن جداگانه حساب می‌شه. در حالت کامپیوتر، سطح سختی روی قدرت جست‌وجوی حرکت‌ها اثر می‌ذاره.</p>
  </div>
 </div>
 
-<!-- پنجرهٔ انتخاب مهره -->
 <div class="overlay hidden" id="promotionModal">
  <div class="dialog">
   <h2>سربازت به آخر رسید! 🎉</h2>
   <p class="intro">انتخاب کن سربازت به چه مهره‌ای تبدیل بشه.</p>
   <div class="promotion-options">
-   <button class="promo-btn" data-piece="q"><span class="promo-symbol" id="promoQ">♕</span><span class="promo-name">وزیر</span></button>
-   <button class="promo-btn" data-piece="r"><span class="promo-symbol" id="promoR">♖</span><span class="promo-name">رخ</span></button>
-   <button class="promo-btn" data-piece="b"><span class="promo-symbol" id="promoB">♗</span><span class="promo-name">فیل</span></button>
-   <button class="promo-btn" data-piece="n"><span class="promo-symbol" id="promoN">♘</span><span class="promo-name">اسب</span></button>
+   <button type="button" class="promo-btn" data-piece="q"><span class="promo-symbol" id="promoQ">♕</span><span class="promo-name">وزیر</span></button>
+   <button type="button" class="promo-btn" data-piece="r"><span class="promo-symbol" id="promoR">♖</span><span class="promo-name">رخ</span></button>
+   <button type="button" class="promo-btn" data-piece="b"><span class="promo-symbol" id="promoB">♗</span><span class="promo-name">فیل</span></button>
+   <button type="button" class="promo-btn" data-piece="n"><span class="promo-symbol" id="promoN">♘</span><span class="promo-name">اسب</span></button>
   </div>
  </div>
 </div>
 
-<!-- پایان مسابقه -->
 <div class="overlay hidden" id="endOverlay">
  <div class="dialog">
   <h2 id="endTitle">پایان بازی</h2>
   <p class="intro" id="endText"></p>
-  <button class="start-btn" id="againBtn">بازی جدید 🔄</button>
-  <button class="secondary-btn" id="closeEndBtn">دیدن صفحهٔ شطرنج</button>
+  <button type="button" class="start-btn" id="againBtn">بازی جدید 🔄</button>
+  <button type="button" class="secondary-btn" id="closeEndBtn">دیدن صفحهٔ شطرنج</button>
  </div>
 </div>
 
@@ -165,26 +163,42 @@ footer{color:#718096;font-size:11px;margin-top:16px}
 'use strict';
 
 const $=id=>document.getElementById(id);
-const boardEl=$('board'),statusEl=$('status'),movesEl=$('moves');
-const setupOverlay=$('setupOverlay'),promotionModal=$('promotionModal'),endOverlay=$('endOverlay');
-const game=new Chess();
+const boardEl=$('board');
+const statusEl=$('status');
+const movesEl=$('moves');
+const setupOverlay=$('setupOverlay');
+const promotionModal=$('promotionModal');
+const endOverlay=$('endOverlay');
 
+/* اول بررسی می‌کنیم کتابخانهٔ شطرنج بارگذاری شده باشد. */
 if(typeof Chess==='undefined'){
- statusEl.textContent='کتابخانهٔ شطرنج بارگذاری نشد؛ اینترنت را بررسی کن.';
+ statusEl.textContent='کتابخانهٔ شطرنج بارگذاری نشد؛ اینترنت را بررسی کن و صفحه را دوباره باز کن.';
  boardEl.style.display='none';
- throw new Error('chess.js failed to load');
+ $('startBtn').disabled=true;
+ return;
 }
+
+const game=new Chess();
 
 const symbols={
  wk:'♔',wq:'♕',wr:'♖',wb:'♗',wn:'♘',wp:'♙',
  bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟'
 };
 
-let selected=null,targets=[],lastMove=null,thinking=false;
-let pendingPromotion=null,gameToken=0,gameActive=false;
-let difficulty=2,baseSeconds=600,incrementSeconds=0;
-let whiteRemaining=600000,blackRemaining=600000;
-let lastClockUpdate=0,timerId=null;
+let selected=null;
+let targets=[];
+let lastMove=null;
+let thinking=false;
+let pendingPromotion=null;
+let gameToken=0;
+let gameActive=false;
+let difficulty=2;
+let baseSeconds=600;
+let incrementSeconds=0;
+let whiteRemaining=600000;
+let blackRemaining=600000;
+let lastClockUpdate=0;
+let timerId=null;
 
 function formatTime(ms){
  ms=Math.max(0,ms);
@@ -210,6 +224,7 @@ function stopTimer(){
 
 function tickClock(){
  if(!gameActive)return;
+
  const now=Date.now();
  const delta=Math.max(0,now-lastClockUpdate);
  lastClockUpdate=now;
@@ -219,20 +234,18 @@ function tickClock(){
 
  if(whiteRemaining<=0){
   whiteRemaining=0;
-  gameActive=false;
-  stopTimer();
   updateClocks();
   finishGame('زمان سفید تمام شد! سیاه برنده شد. ⏰');
   return;
  }
+
  if(blackRemaining<=0){
   blackRemaining=0;
-  gameActive=false;
-  stopTimer();
   updateClocks();
   finishGame('زمان سیاه تمام شد! سفید برنده شد. ⏰');
   return;
  }
+
  updateClocks();
 }
 
@@ -258,9 +271,14 @@ function render(){
    const piece=position[r][c];
    const cell=document.createElement('button');
 
+   cell.type='button';
    cell.className='square '+((r+c)%2===0?'light':'dark');
    cell.setAttribute('aria-label',square);
-   if(lastMove&&(square===lastMove.from||square===lastMove.to))cell.classList.add('last');
+
+   if(lastMove&&(square===lastMove.from||square===lastMove.to)){
+    cell.classList.add('last');
+   }
+
    if(square===selected)cell.classList.add('selected');
 
    const target=targets.find(m=>m.to===square);
@@ -277,6 +295,7 @@ function render(){
    boardEl.appendChild(cell);
   }
  }
+
  updateStatus();
  updateHistory();
  updateClocks();
@@ -300,10 +319,12 @@ function updateStatus(){
 
 function updateHistory(){
  const history=game.history();
+
  if(!history.length){
   movesEl.textContent='هنوز حرکتی انجام نشده.';
   return;
  }
+
  const rows=[];
  for(let i=0;i<history.length;i+=2){
   rows.push((Math.floor(i/2)+1)+'. '+history[i]+(history[i+1]?'  '+history[i+1]:''));
@@ -319,8 +340,10 @@ function tapSquare(square){
 
  if(selected){
   const possible=targets.filter(m=>m.to===square);
+
   if(possible.length){
    const promotionMove=possible.find(m=>m.promotion);
+
    if(promotionMove){
     pendingPromotion={from:selected,to:square,token:gameToken};
     showPromotionChoices(game.turn());
@@ -329,10 +352,12 @@ function tapSquare(square){
 
    const mover=game.turn();
    const result=game.move({from:selected,to:square});
+
    if(result){
     lastMove={from:result.from,to:result.to};
     addIncrement(mover);
-    selected=null;targets=[];
+    selected=null;
+    targets=[];
     render();
     afterHumanMove();
     return;
@@ -344,8 +369,10 @@ function tapSquare(square){
   selected=square;
   targets=game.moves({square:square,verbose:true});
  }else{
-  selected=null;targets=[];
+  selected=null;
+  targets=[];
  }
+
  render();
 }
 
@@ -353,6 +380,7 @@ function showPromotionChoices(color){
  const glyphs=color==='w'
  ?{q:'♕',r:'♖',b:'♗',n:'♘'}
  :{q:'♛',r:'♜',b:'♝',n:'♞'};
+
  $('promoQ').textContent=glyphs.q;
  $('promoR').textContent=glyphs.r;
  $('promoB').textContent=glyphs.b;
@@ -366,27 +394,44 @@ document.querySelectorAll('.promo-btn').forEach(button=>{
 
 function finishPromotion(pieceType){
  if(!pendingPromotion||!gameActive)return;
+
  const pending=pendingPromotion;
  pendingPromotion=null;
  promotionModal.classList.add('hidden');
 
- if(pending.token!==gameToken){selected=null;targets=[];render();return;}
+ if(pending.token!==gameToken){
+  selected=null;
+  targets=[];
+  render();
+  return;
+ }
 
  const mover=game.turn();
- const result=game.move({from:pending.from,to:pending.to,promotion:pieceType});
- selected=null;targets=[];
+ const result=game.move({
+  from:pending.from,
+  to:pending.to,
+  promotion:pieceType
+ });
+
+ selected=null;
+ targets=[];
 
  if(result){
   lastMove={from:result.from,to:result.to};
   addIncrement(mover);
   render();
   afterHumanMove();
- }else render();
+ }else{
+  render();
+ }
 }
 
 function afterHumanMove(){
  if(game.game_over()){
-  gameActive=false;stopTimer();render();
+  gameActive=false;
+  stopTimer();
+  render();
+
   finishGame(game.in_checkmate()
    ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
    :'بازی مساوی شد. 🤝');
@@ -396,8 +441,11 @@ function afterHumanMove(){
  if($('mode').value==='ai'&&game.turn()==='b'){
   thinking=true;
   updateStatus();
+
   const token=gameToken;
-  setTimeout(()=>{if(token===gameToken&&thinking&&gameActive)aiMove(token);},250);
+  setTimeout(()=>{
+   if(token===gameToken&&thinking&&gameActive)aiMove(token);
+  },250);
  }
 }
 
@@ -411,56 +459,75 @@ function evaluatePosition(){
   for(let c=0;c<8;c++){
    const p=position[r][c];
    if(!p)continue;
+
    let value=values[p.type];
    const advance=p.color==='w'?(6-r):(r-1);
+
    if(p.type==='p')value+=advance*8;
    if(c>=2&&c<=5&&r>=2&&r<=5)value+=8;
+
    score+=(p.color==='b'?value:-value);
   }
  }
+
  if(game.in_check())score+=(game.turn()==='w'?80:-80);
  return score;
 }
 
+/* اصلاح اصلی اینجاست: تابع minimax به‌درستی بسته شده است. */
 function minimax(depth,alpha,beta,maximizing){
  if(game.game_over()||depth===0)return evaluatePosition();
+
  const moves=game.moves({verbose:true});
  if(!moves.length)return evaluatePosition();
 
  if(maximizing){
   let best=-Infinity;
+
   for(const m of moves){
    game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
    const score=minimax(depth-1,alpha,beta,false);
    game.undo();
+
    best=Math.max(best,score);
    alpha=Math.max(alpha,best);
    if(beta<=alpha)break;
   }
+
   return best;
  }else{
   let best=Infinity;
+
   for(const m of moves){
    game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
    const score=minimax(depth-1,alpha,beta,true);
    game.undo();
+
    best=Math.min(best,score);
    beta=Math.min(beta,best);
    if(beta<=alpha)break;
   }
+
   return best;
-}
+ }
+} /* این آکولاد جاافتاده باعث از کار افتادن کل کد شده بود. */
 
 function aiMove(token){
  if(token!==gameToken||!gameActive||game.game_over()){
-  thinking=false;render();return;
+  thinking=false;
+  render();
+  return;
  }
 
  const moves=game.moves({verbose:true});
- if(!moves.length){thinking=false;render();return;}
+ if(!moves.length){
+  thinking=false;
+  render();
+  return;
+ }
 
- let best=-Infinity,candidates=[];
- // سطح سختی تعیین می‌کند چند حرکت آینده بررسی شود.
+ let best=-Infinity;
+ let candidates=[];
  const depth=Number(difficulty);
 
  for(const m of moves){
@@ -469,14 +536,22 @@ function aiMove(token){
   game.undo();
 
   const adjusted=score+(Math.random()*8);
-  if(adjusted>best){best=adjusted;candidates=[m];}
-  else if(adjusted>=best-10)candidates.push(m);
+
+  if(adjusted>best){
+   best=adjusted;
+   candidates=[m];
+  }else if(adjusted>=best-10){
+   candidates.push(m);
+  }
  }
 
  const chosen=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];
  const mover=game.turn();
+
  const result=game.move({
-  from:chosen.from,to:chosen.to,promotion:chosen.promotion||'q'
+  from:chosen.from,
+  to:chosen.to,
+  promotion:chosen.promotion||'q'
  });
 
  if(result){
@@ -485,11 +560,14 @@ function aiMove(token){
  }
 
  thinking=false;
- selected=null;targets=[];
+ selected=null;
+ targets=[];
  render();
 
  if(game.game_over()){
-  gameActive=false;stopTimer();
+  gameActive=false;
+  stopTimer();
+
   finishGame(game.in_checkmate()
    ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
    :'بازی مساوی شد. 🤝');
@@ -509,59 +587,80 @@ function finishGame(message){
 function beginGame(){
  gameToken++;
  game.reset();
- selected=null;targets=[];lastMove=null;thinking=false;
+
+ selected=null;
+ targets=[];
+ lastMove=null;
+ thinking=false;
  pendingPromotion=null;
+
  promotionModal.classList.add('hidden');
  endOverlay.classList.add('hidden');
 
  difficulty=Number($('difficulty').value);
+
  const time=$('timeControl').value.split(',').map(Number);
  baseSeconds=time[0];
  incrementSeconds=time[1];
+
  whiteRemaining=baseSeconds*1000;
  blackRemaining=baseSeconds*1000;
 
  $('mode').value=$('startMode').value;
+
  gameActive=true;
  setupOverlay.classList.add('hidden');
+
  render();
  startTimer();
 }
 
 function undoMove(){
  if(!gameActive||thinking||pendingPromotion||!game.history().length)return;
+
  stopTimer();
 
- const before=game.history({verbose:true});
- const undone=game.undo();
- if(undone)addIncrement('w'); // ساعت باقیمانده در حرکت برگشتی را دست‌کاری نمی‌کنیم.
+ game.undo();
 
+ /* در برگشت حرکت، زمان اضافی به هیچ بازیکنی داده نمی‌شود. */
  if($('mode').value==='ai'&&game.history().length&&game.turn()==='b'){
   game.undo();
  }
 
  const history=game.history({verbose:true});
+
  lastMove=history.length
- ?{from:history[history.length-1].from,to:history[history.length-1].to}:null;
- selected=null;targets=[];
+ ?{from:history[history.length-1].from,to:history[history.length-1].to}
+ :null;
+
+ selected=null;
+ targets=[];
+
  render();
  startTimer();
 }
 
 function showSetup(){
- gameActive=false;thinking=false;pendingPromotion=null;
+ gameActive=false;
+ thinking=false;
+ pendingPromotion=null;
  gameToken++;
+
  stopTimer();
  promotionModal.classList.add('hidden');
  endOverlay.classList.add('hidden');
  setupOverlay.classList.remove('hidden');
+
+ updateClocks();
 }
 
 $('startBtn').addEventListener('click',beginGame);
 $('newBtn').addEventListener('click',showSetup);
 $('undoBtn').addEventListener('click',undoMove);
 $('againBtn').addEventListener('click',showSetup);
-$('closeEndBtn').addEventListener('click',()=>endOverlay.classList.add('hidden'));
+$('closeEndBtn').addEventListener('click',()=>{
+ endOverlay.classList.add('hidden');
+});
 
 $('mode').addEventListener('change',()=>{
  $('startMode').value=$('mode').value;
