@@ -189,7 +189,7 @@ main{
 <body>
 <header>
   <div class="logo">TAHA CHESS</div>
-  <div class="subtitle">شطرنج خودت رو بازی کن ♟</div>
+  <div class="subtitle">فکر کن، حرکت کن، برنده شو! ♟</div>
 </header>
 
 <main>
@@ -953,7 +953,7 @@ function initializeChess() {
       const winner=game.turn()==="w"?"مشکی":"سفید";
       finishGame(
         `کیش‌ومات! ${winner} برنده شد!`,
-        "مهره‌های مهاجم با هالهٔ قرمز مشخص شده‌اند.",
+        "",
         "checkmate"
       );
     }else if(game.in_draw()){
@@ -988,8 +988,7 @@ function initializeChess() {
     $("status").classList.add("result");
 
     if(reason==="checkmate"){
-      $("resultDetail").textContent=
-        `شاه مات‌شده مشخص است؛ ${checkingAttackers.length}${checkingAttackers.length===1?" است":" شده‌اند"}.`;
+      $("resultDetail").textContent="";
     }else{
       $("resultDetail").textContent=message;
     }
