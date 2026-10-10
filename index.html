@@ -3,672 +3,1106 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#10151f">
-<title>Taha Chess</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAHA CHESS</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px 12px 30px;background:#10151f;color:#f4f6fa;font-family:Tahoma,Arial,sans-serif;text-align:center}
-.app{max-width:480px;margin:auto}
-h1{margin:5px;color:#d9edbd;font-size:28px}
-.sub{color:#9baac0;font-size:12px;margin:8px 0 16px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1b2432;padding:12px;border-radius:13px;margin-bottom:10px}
-#status{font-size:12px;text-align:right}
-.tag{color:#c4e88d;font-size:10px;white-space:nowrap}
-.clocks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
-.clock{background:#1b2432;border:2px solid #2b3b50;border-radius:13px;padding:10px 8px;text-align:center}
-.clock small{display:block;color:#aab7c9;font-size:11px;margin-bottom:5px}
-.clock strong{font-size:25px;letter-spacing:1px;font-variant-numeric:tabular-nums}
-.clock.active{border-color:#b7f34a;background:#253226}
-.clock.low strong{color:#ff6976}
-.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border:5px solid #29374a;border-radius:8px;overflow:hidden;direction:ltr;box-shadow:0 12px 35px #0006}
-.square{border:0;margin:0;padding:0;position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;font-family:Arial,sans-serif;font-size:clamp(27px,8vw,45px);cursor:pointer;touch-action:manipulation;user-select:none}
-.light{background:#e7e2d4}.dark{background:#748c7c}
-.square.selected{background:#e8d36d!important}
-.square.last{background:#baca65}
-.square.hint:after{content:"";position:absolute;width:24%;height:24%;border-radius:50%;background:#253b348c}
-.square.capture:after{content:"";position:absolute;inset:3px;border:4px solid #b34d58;border-radius:50%}
-.piece.white{color:#fff;text-shadow:1px 2px 2px #222,0 0 2px #222}
-.piece.black{color:#20242c;text-shadow:0 1px 1px #fff6}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-button,select{font-family:inherit}
-.action,.mode-select{background:#263346;color:#f5f7fb;border:1px solid #3c4b60;padding:12px 8px;border-radius:11px;font-size:13px;cursor:pointer}
-.action:disabled{opacity:.45}
-.mode-select{width:100%;margin-top:9px}
-.history{margin-top:13px;background:#1b2432;border-radius:13px;padding:13px;text-align:right}
-.history h3{margin:0 0 8px;font-size:13px;color:#d9edbd}
-#moves{font-size:12px;color:#c1ccda;line-height:2;overflow-wrap:anywhere}
-footer{color:#718096;font-size:11px;margin-top:16px}
-.overlay{position:fixed;inset:0;z-index:100;background:#080d16ef;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
-.overlay.hidden{display:none}
-.dialog{width:100%;max-width:370px;background:#1b2432;border:1px solid #3b4c63;border-radius:21px;padding:22px 18px;box-shadow:0 15px 50px #0009;text-align:right}
-.dialog h2{text-align:center;color:#d9edbd;margin:0 0 7px;font-size:24px}
-.dialog .intro{text-align:center;color:#aab7c9;font-size:12px;line-height:1.8;margin:0 0 18px}
-.field{margin:13px 0}
-.field label{display:block;font-size:12px;color:#e0e7f0;margin-bottom:7px}
-.field select{width:100%;padding:12px;background:#101a29;color:#fff;border:1px solid #40516a;border-radius:10px;font-size:14px}
-.start-btn{width:100%;margin-top:12px;background:#b7f34a;color:#18210e;border:0;border-radius:12px;padding:14px;font-weight:bold;font-size:16px;cursor:pointer}
-.secondary-btn{width:100%;margin-top:9px;background:#263346;color:#fff;border:1px solid #40516a;border-radius:12px;padding:12px;cursor:pointer}
-.note{font-size:11px;line-height:1.8;color:#93a3b9;margin-top:12px}
-.promotion-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
-.promo-btn{background:#e7e2d4;color:#20242c;border:3px solid transparent;border-radius:12px;padding:8px 2px;cursor:pointer}
-.promo-symbol{display:block;font-size:39px;line-height:1.2}
-.promo-name{display:block;font-size:11px;margin-top:5px}
-@media(min-width:500px){.square{font-size:44px}}
+:root {
+  --bg:#10141c;
+  --panel:#1b2230;
+  --panel2:#252f40;
+  --text:#f4f6fb;
+  --muted:#a7b0c0;
+  --accent:#55d6a2;
+  --light:#e8edf3;
+  --dark:#72917d;
+  --yellow:#f6d365;
+  --red:#ff6878;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:radial-gradient(ellipse at top,#202a3a,var(--bg) 65%);
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+  min-height:100vh;
+}
+button,select {font:inherit}
+button {cursor:pointer}
+button:disabled {opacity:.45;cursor:not-allowed}
+header {
+  text-align:center;
+  padding:22px 12px 12px;
+}
+.logo {
+  font-size:clamp(28px,6vw,42px);
+  font-weight:900;
+  letter-spacing:3px;
+  color:var(--accent);
+  text-shadow:0 0 24px #55d6a233;
+}
+.subtitle {color:var(--muted);font-size:13px;margin-top:8px}
+main {
+  width:min(1100px,100%);
+  margin:auto;
+  padding:14px;
+  display:grid;
+  grid-template-columns:minmax(0,620px) minmax(260px,1fr);
+  gap:18px;
+  align-items:start;
+}
+.panel {
+  background:var(--panel);
+  border:1px solid #ffffff12;
+  border-radius:18px;
+  padding:15px;
+  box-shadow:0 14px 40px #0003;
+}
+.player {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:11px 13px;
+  background:var(--panel2);
+  border-radius:12px;
+  margin-bottom:10px;
+}
+.player-name {font-weight:bold}
+.player-sub {font-size:12px;color:var(--muted);margin-top:5px}
+.clock {
+  direction:ltr;
+  font-family:monospace;
+  font-weight:bold;
+  font-size:clamp(22px,4vw,30px);
+  background:#111722;
+  padding:7px 12px;
+  min-width:100px;
+  text-align:center;
+  border-radius:9px;
+  border:1px solid #ffffff14;
+}
+.clock.active {color:var(--accent);border-color:var(--accent)}
+.clock.low {color:var(--red)}
+.clock.no-time {font-size:17px;color:var(--muted)}
+#board {
+  width:100%;
+  aspect-ratio:1;
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  overflow:hidden;
+  border-radius:5px;
+  border:3px solid #0d1118;
+  user-select:none;
+}
+.square {
+  border:0;
+  padding:0;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  aspect-ratio:1;
+  min-width:0;
+}
+.square.light {background:var(--light)}
+.square.dark {background:var(--dark)}
+.square.selected {box-shadow:inset 0 0 0 4px var(--yellow)}
+.square.last {background:#d4ce69}
+.square.check {background:#df6a73}
+.square.legal::after {
+  content:"";
+  position:absolute;
+  width:23%;
+  height:23%;
+  border-radius:50%;
+  background:#17221f66;
+}
+.square.capture::after {
+  content:"";
+  position:absolute;
+  inset:4%;
+  border:5px solid #17221f66;
+  border-radius:50%;
+}
+.piece {
+  z-index:1;
+  font-family:"DejaVu Sans", "Arial Unicode MS",serif;
+  font-size:clamp(27px,6.8vw,58px);
+  line-height:1;
+  pointer-events:none;
+}
+.piece.white {
+  color:#fff;
+  text-shadow:1px 2px 2px #000,0 0 2px #000;
+}
+.piece.black {
+  color:#171b22;
+  text-shadow:0 1px 1px #ffffff66;
+}
+.coordinates {
+  position:absolute;
+  font-size:clamp(8px,1.6vw,12px);
+  font-weight:bold;
+  z-index:2;
+  pointer-events:none;
+  opacity:.8;
+}
+.coord-file {bottom:2px;left:4px}
+.coord-rank {top:2px;right:4px}
+.square.light .coordinates {color:#40564a}
+.square.dark .coordinates {color:#f3f5f7}
+#status {
+  text-align:center;
+  color:var(--muted);
+  min-height:42px;
+  padding:13px 4px 4px;
+  font-size:14px;
+  line-height:1.8;
+}
+.actions {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.btn {
+  padding:11px 8px;
+  border:0;
+  border-radius:10px;
+  font-weight:bold;
+  color:var(--text);
+  background:#303b4d;
+}
+.btn:hover {filter:brightness(1.13)}
+.btn.primary {background:var(--accent);color:#10231c}
+.btn.danger {background:#743b47}
+.side-title {
+  font-weight:bold;
+  font-size:17px;
+  margin:3px 0 15px;
+}
+.field {margin-bottom:14px}
+.field label {
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:7px;
+}
+.field select {
+  width:100%;
+  padding:11px;
+  background:#111722;
+  border:1px solid #ffffff20;
+  border-radius:10px;
+  color:var(--text);
+}
+.note {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.9;
+}
+.moves {
+  max-height:245px;
+  overflow:auto;
+  background:#111722;
+  border-radius:10px;
+  padding:8px;
+}
+.move-row {
+  display:grid;
+  grid-template-columns:36px 1fr 1fr;
+  gap:6px;
+  padding:7px;
+  border-bottom:1px solid #ffffff0d;
+  font-size:13px;
+}
+.move-num {color:var(--muted)}
+.move-cell {text-align:center}
+.footer {
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  padding:15px;
+}
+.overlay {
+  position:fixed;
+  inset:0;
+  background:#080b10dd;
+  z-index:10;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+  overflow:auto;
+}
+.modal {
+  width:min(430px,100%);
+  background:var(--panel);
+  border:1px solid #ffffff1a;
+  border-radius:20px;
+  padding:24px;
+  box-shadow:0 20px 80px #0008;
+}
+.modal h2 {margin:0 0 10px;text-align:center}
+.modal p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
+  text-align:center;
+}
+.modal .btn {width:100%;margin-top:10px}
+.hidden {display:none!important}
+.promo-options {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:15px;
+}
+.promo-piece {
+  background:var(--panel2);
+  border:1px solid #ffffff18;
+  border-radius:12px;
+  font-size:38px;
+  padding:10px 0;
+  color:white;
+}
+@media(max-width:800px) {
+  main {grid-template-columns:1fr;max-width:620px}
+  .panel {padding:12px}
+  .side-panel {display:grid;grid-template-columns:1fr;gap:8px}
+  .piece {font-size:clamp(27px,10vw,54px)}
+}
 </style>
 </head>
+
 <body>
-<div class="app">
- <h1>♟ TAHA CHESS</h1>
- <div class="sub">انتخاب کن، فکر کن، برنده شو.</div>
+<header>
+  <div class="logo">TAHA CHESS</div>
+  <div class="subtitle">شطرنج خودت رو بازی کن ♟</div>
+</header>
 
- <div class="clocks">
-  <div class="clock" id="blackClock">
-   <small>سیاه ⚫</small><strong id="blackTime">10:00</strong>
-  </div>
-  <div class="clock active" id="whiteClock">
-   <small>سفید ⚪ · تو</small><strong id="whiteTime">10:00</strong>
-  </div>
- </div>
+<main>
+  <section class="panel">
+    <div class="player">
+      <div>
+        <div class="player-name" id="blackName">مهره‌های مشکی</div>
+        <div class="player-sub" id="blackSub">بازیکن دوم</div>
+      </div>
+      <div class="clock" id="blackTime">10:00</div>
+    </div>
 
- <div class="top">
-  <div id="status">برای شروع بازی تنظیمات رو انتخاب کن.</div>
-  <div class="tag">♛ CHESS ARENA</div>
- </div>
+    <div id="board" aria-label="صفحه شطرنج"></div>
 
- <div class="board" id="board"></div>
+    <div id="status">برای شروع مسابقه، تنظیمات رو انتخاب کن.</div>
 
- <div class="controls">
-  <button class="action" id="undoBtn">↩️ برگشت حرکت</button>
-  <button class="action" id="newBtn">🔄 بازی جدید</button>
- </div>
+    <div class="player">
+      <div>
+        <div class="player-name" id="whiteName">مهره‌های سفید</div>
+        <div class="player-sub" id="whiteSub">بازیکن اول</div>
+      </div>
+      <div class="clock" id="whiteTime">10:00</div>
+    </div>
 
- <select class="mode-select" id="mode">
-  <option value="ai">🤖 بازی با کامپیوتر</option>
-  <option value="two">👥 بازی دونفره</option>
- </select>
+    <div class="actions">
+      <button class="btn" id="undoBtn" type="button">↩ برگشت</button>
+      <button class="btn" id="flipBtn" type="button">صفحه</button>
+      <button class="btn primary" id="newBtn" type="button">بازی جدید</button>
+    </div>
+  </section>
 
- <div class="history">
-  <h3>📜 تاریخچهٔ حرکات</h3>
-  <div id="moves">هنوز حرکتی انجام نشده.</div>
- </div>
- <footer>TAHA CHESS · رکوردت رو بشکن! ♟️</footer>
-</div>
+  <aside class="panel side-panel">
+    <div>
+      <div class="side-title">⚙️ تنظیمات مسابقه</div>
+
+      <div class="field">
+        <label for="startMode">نوع بازی</label>
+        <select id="startMode">
+          <option value="ai">بازی با هوش مصنوعی</option>
+          <option value="pvp">دو نفره روی یک دستگاه</option>
+        </select>
+      </div>
+
+      <div class="field" id="difficultyField">
+        <label for="difficulty">درجه سختی هوش مصنوعی</label>
+        <select id="difficulty">
+          <option value="easy">آسان</option>
+          <option value="medium" selected>متوسط</option>
+          <option value="hard">سخت</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="timeControl">زمان مسابقه</label>
+        <select id="timeControl">
+          <option value="0">♾️ بدون زمان</option>
+          <option value="60">۱ دقیقه</option>
+          <option value="180">۳ دقیقه</option>
+          <option value="182">۳ دقیقه + ۲ ثانیه</option>
+          <option value="300">۵ دقیقه</option>
+          <option value="303">۵ دقیقه + ۳ ثانیه</option>
+          <option value="600" selected>۱۰ دقیقه</option>
+          <option value="910">۱۵ دقیقه + ۱۰ ثانیه</option>
+        </select>
+      </div>
+
+      <button class="btn primary" id="startBtn" type="button">شروع مسابقه ♟</button>
+      <p class="note">در حالت بدون زمان، هیچ‌کدوم از ساعت‌ها کم نمی‌شن. در حالت زمان‌دار، زمان اضافه بعد از هر حرکت به بازیکن تعلق می‌گیره.</p>
+    </div>
+
+    <div>
+      <div class="side-title">📜 حرکت‌های مسابقه</div>
+      <div class="moves" id="moves">
+        <div class="note">هنوز حرکتی انجام نشده.</div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div class="footer">TAHA CHESS · Play fair, think smart.</div>
 
 <div class="overlay" id="setupOverlay">
- <div class="dialog">
-  <h2>♟ Taha Chess</h2>
-  <p class="intro">تنظیمات بازی رو انتخاب کن و آمادهٔ مسابقه شو!</p>
-
-  <div class="field">
-   <label for="difficulty">🎯 سختی کامپیوتر</label>
-   <select id="difficulty">
-    <option value="1">آسون · برای تمرین</option>
-    <option value="2" selected>متوسط · رقابت نزدیک</option>
-    <option value="3">سخت · چالش جدی</option>
-   </select>
+  <div class="modal">
+    <h2>♟ TAHA CHESS</h2>
+    <p>تنظیماتت رو انتخاب کن و برای شروع مسابقه آماده شو.</p>
+    <button class="btn primary" id="overlayStartBtn" type="button">شروع مسابقه</button>
   </div>
-
-  <div class="field">
-   <label for="timeControl">⏱️ زمان هر بازیکن</label>
-   <select id="timeControl">
-    <option value="60,0">۱ دقیقه · Bullet</option>
-    <option value="180,0">۳ دقیقه · Blitz</option>
-    <option value="180,2">۳ دقیقه + ۲ ثانیه اضافه</option>
-    <option value="300,0">۵ دقیقه · Blitz</option>
-    <option value="300,3">۵ دقیقه + ۳ ثانیه اضافه</option>
-    <option value="600,0" selected>۱۰ دقیقه · Rapid</option>
-    <option value="900,10">۱۵ دقیقه + ۱۰ ثانیه اضافه</option>
-   </select>
-  </div>
-
-  <div class="field">
-   <label for="startMode">👥 نوع مسابقه</label>
-   <select id="startMode">
-    <option value="ai">بازی با کامپیوتر</option>
-    <option value="two">بازی دونفره روی یک دستگاه</option>
-   </select>
-  </div>
-
-  <button type="button" class="start-btn" id="startBtn">شروع مسابقه 🚀</button>
-  <p class="note">زمان هر بازیکن جداگانه حساب می‌شه. در حالت کامپیوتر، سطح سختی روی قدرت جست‌وجوی حرکت‌ها اثر می‌ذاره.</p>
- </div>
 </div>
 
 <div class="overlay hidden" id="promotionModal">
- <div class="dialog">
-  <h2>سربازت به آخر رسید! 🎉</h2>
-  <p class="intro">انتخاب کن سربازت به چه مهره‌ای تبدیل بشه.</p>
-  <div class="promotion-options">
-   <button type="button" class="promo-btn" data-piece="q"><span class="promo-symbol" id="promoQ">♕</span><span class="promo-name">وزیر</span></button>
-   <button type="button" class="promo-btn" data-piece="r"><span class="promo-symbol" id="promoR">♖</span><span class="promo-name">رخ</span></button>
-   <button type="button" class="promo-btn" data-piece="b"><span class="promo-symbol" id="promoB">♗</span><span class="promo-name">فیل</span></button>
-   <button type="button" class="promo-btn" data-piece="n"><span class="promo-symbol" id="promoN">♘</span><span class="promo-name">اسب</span></button>
+  <div class="modal">
+    <h2>ارتقای سرباز</h2>
+    <p>مهره‌ای رو که می‌خوای انتخاب کن.</p>
+    <div class="promo-options">
+      <button class="promo-piece" data-promo="q" type="button">♕</button>
+      <button class="promo-piece" data-promo="r" type="button">♖</button>
+      <button class="promo-piece" data-promo="b" type="button">♗</button>
+      <button class="promo-piece" data-promo="n" type="button">♘</button>
+    </div>
   </div>
- </div>
 </div>
 
 <div class="overlay hidden" id="endOverlay">
- <div class="dialog">
-  <h2 id="endTitle">پایان بازی</h2>
-  <p class="intro" id="endText"></p>
-  <button type="button" class="start-btn" id="againBtn">بازی جدید 🔄</button>
-  <button type="button" class="secondary-btn" id="closeEndBtn">دیدن صفحهٔ شطرنج</button>
- </div>
+  <div class="modal">
+    <h2 id="endTitle">پایان مسابقه</h2>
+    <p id="endMessage"></p>
+    <button class="btn primary" id="againBtn" type="button">بازی دوباره</button>
+    <button class="btn" id="closeEndBtn" type="button">بستن</button>
+  </div>
 </div>
 
 <script>
-(function(){
-'use strict';
+"use strict";
 
-const $=id=>document.getElementById(id);
-const boardEl=$('board');
-const statusEl=$('status');
-const movesEl=$('moves');
-const setupOverlay=$('setupOverlay');
-const promotionModal=$('promotionModal');
-const endOverlay=$('endOverlay');
+const $ = id => document.getElementById(id);
 
-/* اول بررسی می‌کنیم کتابخانهٔ شطرنج بارگذاری شده باشد. */
-if(typeof Chess==='undefined'){
- statusEl.textContent='کتابخانهٔ شطرنج بارگذاری نشد؛ اینترنت را بررسی کن و صفحه را دوباره باز کن.';
- boardEl.style.display='none';
- $('startBtn').disabled=true;
- return;
+if (typeof Chess === "undefined") {
+  $("status").textContent =
+    "کتابخانه شطرنج بارگذاری نشد. اتصال اینترنت رو بررسی و صفحه رو دوباره بارگذاری کن.";
+  $("startBtn").disabled = true;
+  $("overlayStartBtn").disabled = true;
+} else {
+  initializeChess();
 }
 
-const game=new Chess();
+function initializeChess() {
+  let game = new Chess();
 
-const symbols={
- wk:'♔',wq:'♕',wr:'♖',wb:'♗',wn:'♘',wp:'♙',
- bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟'
-};
+  const symbols = {
+    wk:"♔", wq:"♕", wr:"♖", wb:"♗", wn:"♘", wp:"♙",
+    bk:"♚", bq:"♛", br:"♜", bb:"♝", bn:"♞", bp:"♟"
+  };
 
-let selected=null;
-let targets=[];
-let lastMove=null;
-let thinking=false;
-let pendingPromotion=null;
-let gameToken=0;
-let gameActive=false;
-let difficulty=2;
-let baseSeconds=600;
-let incrementSeconds=0;
-let whiteRemaining=600000;
-let blackRemaining=600000;
-let lastClockUpdate=0;
-let timerId=null;
+  const pieceValues = {p:100,n:320,b:330,r:500,q:900,k:20000};
 
-function formatTime(ms){
- ms=Math.max(0,ms);
- const total=Math.ceil(ms/1000);
- const minutes=Math.floor(total/60);
- const seconds=total%60;
- return String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0');
-}
+  let selectedSquare = null;
+  let legalTargets = [];
+  let lastMove = null;
+  let flipped = false;
+  let running = false;
+  let finished = false;
+  let mode = "ai";
+  let difficulty = "medium";
+  let timed = true;
+  let baseSeconds = 600;
+  let incrementSeconds = 0;
+  let whiteSeconds = 600;
+  let blackSeconds = 600;
+  let activeClock = "w";
+  let turnStartedAt = 0;
+  let clockInterval = null;
+  let aiToken = 0;
+  let pendingPromotion = null;
+  let clockSnapshots = [];
 
-function updateClocks(){
- $('whiteTime').textContent=formatTime(whiteRemaining);
- $('blackTime').textContent=formatTime(blackRemaining);
- $('whiteClock').classList.toggle('active',gameActive&&game.turn()==='w');
- $('blackClock').classList.toggle('active',gameActive&&game.turn()==='b');
- $('whiteClock').classList.toggle('low',whiteRemaining<=10000);
- $('blackClock').classList.toggle('low',blackRemaining<=10000);
-}
-
-function stopTimer(){
- if(timerId!==null)clearInterval(timerId);
- timerId=null;
-}
-
-function tickClock(){
- if(!gameActive)return;
-
- const now=Date.now();
- const delta=Math.max(0,now-lastClockUpdate);
- lastClockUpdate=now;
-
- if(game.turn()==='w')whiteRemaining-=delta;
- else blackRemaining-=delta;
-
- if(whiteRemaining<=0){
-  whiteRemaining=0;
-  updateClocks();
-  finishGame('زمان سفید تمام شد! سیاه برنده شد. ⏰');
-  return;
- }
-
- if(blackRemaining<=0){
-  blackRemaining=0;
-  updateClocks();
-  finishGame('زمان سیاه تمام شد! سفید برنده شد. ⏰');
-  return;
- }
-
- updateClocks();
-}
-
-function startTimer(){
- stopTimer();
- lastClockUpdate=Date.now();
- timerId=setInterval(tickClock,100);
-}
-
-function addIncrement(color){
- const add=incrementSeconds*1000;
- if(color==='w')whiteRemaining+=add;
- else blackRemaining+=add;
-}
-
-function render(){
- boardEl.innerHTML='';
- const position=game.board();
-
- for(let r=0;r<8;r++){
-  for(let c=0;c<8;c++){
-   const square=String.fromCharCode(97+c)+(8-r);
-   const piece=position[r][c];
-   const cell=document.createElement('button');
-
-   cell.type='button';
-   cell.className='square '+((r+c)%2===0?'light':'dark');
-   cell.setAttribute('aria-label',square);
-
-   if(lastMove&&(square===lastMove.from||square===lastMove.to)){
-    cell.classList.add('last');
-   }
-
-   if(square===selected)cell.classList.add('selected');
-
-   const target=targets.find(m=>m.to===square);
-   if(target)cell.classList.add(piece?'capture':'hint');
-
-   if(piece){
-    const span=document.createElement('span');
-    span.className='piece '+(piece.color==='w'?'white':'black');
-    span.textContent=symbols[piece.color+piece.type];
-    cell.appendChild(span);
-   }
-
-   cell.addEventListener('click',()=>tapSquare(square));
-   boardEl.appendChild(cell);
+  function currentTime() {
+    return Date.now();
   }
- }
 
- updateStatus();
- updateHistory();
- updateClocks();
-}
+  function formatTime(seconds) {
+    seconds = Math.max(0, seconds);
+    const whole = Math.ceil(seconds);
+    const minutes = Math.floor(whole / 60);
+    const secs = whole % 60;
+    const tenths = Math.floor((seconds % 1) * 10);
+    if (whole < 10 && seconds > 0) {
+      return `${minutes}:${String(secs).padStart(2,"0")}.${tenths}`;
+    }
+    return `${minutes}:${String(secs).padStart(2,"0")}`;
+  }
 
-function updateStatus(){
- if(game.in_checkmate()){
-  statusEl.textContent='مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد 🏆';
- }else if(game.in_draw()){
-  statusEl.textContent='بازی مساوی شد 🤝';
- }else if(game.in_check()){
-  statusEl.textContent='کیش! نوبت '+(game.turn()==='w'?'سفید':'سیاه');
- }else if(!gameActive){
-  statusEl.textContent='بازی متوقف است؛ بازی جدید رو بزن.';
- }else if(thinking){
-  statusEl.textContent='کامپیوتر فکر می‌کند...';
- }else{
-  statusEl.textContent='نوبت '+(game.turn()==='w'?'سفید ⚪':'سیاه ⚫');
- }
-}
+  function remaining(side) {
+    return side === "w" ? whiteSeconds : blackSeconds;
+  }
 
-function updateHistory(){
- const history=game.history();
+  function setRemaining(side, value) {
+    if (side === "w") whiteSeconds = value;
+    else blackSeconds = value;
+  }
 
- if(!history.length){
-  movesEl.textContent='هنوز حرکتی انجام نشده.';
-  return;
- }
+  // محاسبه بر اساس زمان واقعی، نه تعداد دفعات اجرای تایمر
+  function chargeClock() {
+    if (!running || finished || !timed || !turnStartedAt) return;
 
- const rows=[];
- for(let i=0;i<history.length;i+=2){
-  rows.push((Math.floor(i/2)+1)+'. '+history[i]+(history[i+1]?'  '+history[i+1]:''));
- }
- movesEl.textContent=rows.join(' | ');
-}
+    const now = currentTime();
+    const elapsed = Math.max(0, (now - turnStartedAt) / 1000);
+    setRemaining(activeClock, remaining(activeClock) - elapsed);
+    turnStartedAt = now;
 
-function tapSquare(square){
- if(!gameActive||thinking||game.game_over()||pendingPromotion)return;
- if($('mode').value==='ai'&&game.turn()==='b')return;
+    if (remaining(activeClock) <= 0) {
+      setRemaining(activeClock, 0);
+      renderClocks();
+      finishGame(
+        activeClock === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
+        "زمان یکی از بازیکن‌ها تمام شد."
+      );
+    }
+  }
 
- const piece=game.get(square);
+  function renderClocks() {
+    const whiteEl = $("whiteTime");
+    const blackEl = $("blackTime");
 
- if(selected){
-  const possible=targets.filter(m=>m.to===square);
+    whiteEl.classList.toggle("active", running && !finished && activeClock === "w" && timed);
+    blackEl.classList.toggle("active", running && !finished && activeClock === "b" && timed);
 
-  if(possible.length){
-   const promotionMove=possible.find(m=>m.promotion);
+    whiteEl.classList.toggle("low", timed && whiteSeconds <= 10 && whiteSeconds > 0);
+    blackEl.classList.toggle("low", timed && blackSeconds <= 10 && blackSeconds > 0);
 
-   if(promotionMove){
-    pendingPromotion={from:selected,to:square,token:gameToken};
-    showPromotionChoices(game.turn());
-    return;
-   }
+    whiteEl.classList.toggle("no-time", !timed);
+    blackEl.classList.toggle("no-time", !timed);
 
-   const mover=game.turn();
-   const result=game.move({from:selected,to:square});
+    whiteEl.textContent = timed ? formatTime(whiteSeconds) : "∞ بدون زمان";
+    blackEl.textContent = timed ? formatTime(blackSeconds) : "∞ بدون زمان";
+  }
 
-   if(result){
-    lastMove={from:result.from,to:result.to};
-    addIncrement(mover);
-    selected=null;
-    targets=[];
+  function render() {
+    const board = $("board");
+    board.innerHTML = "";
+
+    const matrix = game.board();
+    const files = flipped
+      ? ["h","g","f","e","d","c","b","a"]
+      : ["a","b","c","d","e","f","g","h"];
+    const ranks = flipped
+      ? [1,2,3,4,5,6,7,8]
+      : [8,7,6,5,4,3,2,1];
+
+    const checkedKing = game.in_check() ? game.turn() : null;
+
+    for (let ri = 0; ri < 8; ri++) {
+      for (let fi = 0; fi < 8; fi++) {
+        const file = files[fi];
+        const rank = ranks[ri];
+        const squareName = file + rank;
+        const actualRow = 8 - rank;
+        const actualCol = file.charCodeAt(0) - 97;
+        const piece = matrix[actualRow][actualCol];
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "square " +
+          ((rank + actualCol) % 2 === 0 ? "dark" : "light");
+
+        if (selectedSquare === squareName) {
+          button.classList.add("selected");
+        }
+
+        if (lastMove &&
+            (lastMove.from === squareName || lastMove.to === squareName)) {
+          button.classList.add("last");
+        }
+
+        if (piece && piece.type === "k" &&
+            piece.color === checkedKing) {
+          button.classList.add("check");
+        }
+
+        const target = legalTargets.find(m => m.to === squareName);
+        if (target) {
+          button.classList.add(
+            game.get(squareName) ? "capture" : "legal"
+          );
+        }
+
+        if (piece) {
+          const span = document.createElement("span");
+          span.className = "piece " + (piece.color === "w" ? "white" : "black");
+          span.textContent = symbols[piece.color + piece.type];
+          button.appendChild(span);
+        }
+
+        if (ri === 7) {
+          const coord = document.createElement("span");
+          coord.className = "coordinates coord-file";
+          coord.textContent = file;
+          button.appendChild(coord);
+        }
+
+        if (fi === 0) {
+          const coord = document.createElement("span");
+          coord.className = "coordinates coord-rank";
+          coord.textContent = rank;
+          button.appendChild(coord);
+        }
+
+        button.addEventListener("click", () => tapSquare(squareName));
+        board.appendChild(button);
+      }
+    }
+
+    renderClocks();
+    updateStatus();
+    updateHistory();
+    $("undoBtn").disabled = !running || game.history().length === 0;
+  }
+
+  function updateStatus() {
+    const status = $("status");
+
+    if (!running && !finished) {
+      status.textContent = "برای شروع، مسابقه رو تنظیم کن.";
+      return;
+    }
+
+    if (finished) return;
+
+    if (game.in_checkmate()) {
+      status.textContent = "کیش و مات!";
+      return;
+    }
+
+    if (game.in_draw()) {
+      status.textContent = "بازی مساوی شد.";
+      return;
+    }
+
+    const side = game.turn() === "w" ? "سفید" : "مشکی";
+    let message = `نوبت ${side}`;
+
+    if (game.in_check()) message += " — کیش!";
+
+    if (mode === "ai" && game.turn() === "b") {
+      message += " — هوش مصنوعی در حال فکر کردنه...";
+    }
+
+    if (!timed) message += " · بدون محدودیت زمانی";
+
+    status.textContent = message;
+  }
+
+  function updateHistory() {
+    const container = $("moves");
+    const history = game.history();
+
+    if (!history.length) {
+      container.innerHTML = '<div class="note">هنوز حرکتی انجام نشده.</div>';
+      return;
+    }
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < history.length; i += 2) {
+      const row = document.createElement("div");
+      row.className = "move-row";
+
+      const number = document.createElement("span");
+      number.className = "move-num";
+      number.textContent = (Math.floor(i / 2) + 1) + ".";
+
+      const white = document.createElement("span");
+      white.className = "move-cell";
+      white.textContent = history[i] || "";
+
+      const black = document.createElement("span");
+      black.className = "move-cell";
+      black.textContent = history[i + 1] || "";
+
+      row.append(number, white, black);
+      container.appendChild(row);
+    }
+
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function isHumanTurn() {
+    return mode === "pvp" || game.turn() === "w";
+  }
+
+  function tapSquare(square) {
+    if (!running || finished || pendingPromotion || !isHumanTurn()) return;
+
+    const piece = game.get(square);
+
+    if (selectedSquare) {
+      const targetMove = legalTargets.find(m => m.to === square);
+
+      if (targetMove) {
+        if (targetMove.promotion) {
+          pendingPromotion = {
+            from: selectedSquare,
+            to: square
+          };
+          showPromotionChoices();
+          return;
+        }
+
+        makeMove({from:selectedSquare, to:square});
+        return;
+      }
+    }
+
+    if (piece && piece.color === game.turn()) {
+      selectedSquare = square;
+      legalTargets = game.moves({square:square, verbose:true});
+    } else {
+      selectedSquare = null;
+      legalTargets = [];
+    }
+
     render();
-    afterHumanMove();
-    return;
-   }
-  }
- }
-
- if(piece&&piece.color===game.turn()){
-  selected=square;
-  targets=game.moves({square:square,verbose:true});
- }else{
-  selected=null;
-  targets=[];
- }
-
- render();
-}
-
-function showPromotionChoices(color){
- const glyphs=color==='w'
- ?{q:'♕',r:'♖',b:'♗',n:'♘'}
- :{q:'♛',r:'♜',b:'♝',n:'♞'};
-
- $('promoQ').textContent=glyphs.q;
- $('promoR').textContent=glyphs.r;
- $('promoB').textContent=glyphs.b;
- $('promoN').textContent=glyphs.n;
- promotionModal.classList.remove('hidden');
-}
-
-document.querySelectorAll('.promo-btn').forEach(button=>{
- button.addEventListener('click',()=>finishPromotion(button.dataset.piece));
-});
-
-function finishPromotion(pieceType){
- if(!pendingPromotion||!gameActive)return;
-
- const pending=pendingPromotion;
- pendingPromotion=null;
- promotionModal.classList.add('hidden');
-
- if(pending.token!==gameToken){
-  selected=null;
-  targets=[];
-  render();
-  return;
- }
-
- const mover=game.turn();
- const result=game.move({
-  from:pending.from,
-  to:pending.to,
-  promotion:pieceType
- });
-
- selected=null;
- targets=[];
-
- if(result){
-  lastMove={from:result.from,to:result.to};
-  addIncrement(mover);
-  render();
-  afterHumanMove();
- }else{
-  render();
- }
-}
-
-function afterHumanMove(){
- if(game.game_over()){
-  gameActive=false;
-  stopTimer();
-  render();
-
-  finishGame(game.in_checkmate()
-   ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
-   :'بازی مساوی شد. 🤝');
-  return;
- }
-
- if($('mode').value==='ai'&&game.turn()==='b'){
-  thinking=true;
-  updateStatus();
-
-  const token=gameToken;
-  setTimeout(()=>{
-   if(token===gameToken&&thinking&&gameActive)aiMove(token);
-  },250);
- }
-}
-
-const values={p:100,n:320,b:330,r:500,q:900,k:20000};
-
-function evaluatePosition(){
- const position=game.board();
- let score=0;
-
- for(let r=0;r<8;r++){
-  for(let c=0;c<8;c++){
-   const p=position[r][c];
-   if(!p)continue;
-
-   let value=values[p.type];
-   const advance=p.color==='w'?(6-r):(r-1);
-
-   if(p.type==='p')value+=advance*8;
-   if(c>=2&&c<=5&&r>=2&&r<=5)value+=8;
-
-   score+=(p.color==='b'?value:-value);
-  }
- }
-
- if(game.in_check())score+=(game.turn()==='w'?80:-80);
- return score;
-}
-
-/* اصلاح اصلی اینجاست: تابع minimax به‌درستی بسته شده است. */
-function minimax(depth,alpha,beta,maximizing){
- if(game.game_over()||depth===0)return evaluatePosition();
-
- const moves=game.moves({verbose:true});
- if(!moves.length)return evaluatePosition();
-
- if(maximizing){
-  let best=-Infinity;
-
-  for(const m of moves){
-   game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
-   const score=minimax(depth-1,alpha,beta,false);
-   game.undo();
-
-   best=Math.max(best,score);
-   alpha=Math.max(alpha,best);
-   if(beta<=alpha)break;
   }
 
-  return best;
- }else{
-  let best=Infinity;
+  function showPromotionChoices() {
+    const color = game.turn();
+    const pieces = color === "w"
+      ? {q:"♕",r:"♖",b:"♗",n:"♘"}
+      : {q:"♛",r:"♜",b:"♝",n:"♞"};
 
-  for(const m of moves){
-   game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
-   const score=minimax(depth-1,alpha,beta,true);
-   game.undo();
+    document.querySelectorAll("[data-promo]").forEach(button => {
+      button.textContent = pieces[button.dataset.promo];
+    });
 
-   best=Math.min(best,score);
-   beta=Math.min(beta,best);
-   if(beta<=alpha)break;
+    $("promotionModal").classList.remove("hidden");
   }
 
-  return best;
- }
-} /* این آکولاد جاافتاده باعث از کار افتادن کل کد شده بود. */
+  document.querySelectorAll("[data-promo]").forEach(button => {
+    button.addEventListener("click", () => {
+      if (!pendingPromotion) return;
 
-function aiMove(token){
- if(token!==gameToken||!gameActive||game.game_over()){
-  thinking=false;
-  render();
-  return;
- }
+      const move = {
+        from: pendingPromotion.from,
+        to: pendingPromotion.to,
+        promotion: button.dataset.promo
+      };
 
- const moves=game.moves({verbose:true});
- if(!moves.length){
-  thinking=false;
-  render();
-  return;
- }
+      pendingPromotion = null;
+      $("promotionModal").classList.add("hidden");
+      makeMove(move);
+    });
+  });
 
- let best=-Infinity;
- let candidates=[];
- const depth=Number(difficulty);
-
- for(const m of moves){
-  game.move({from:m.from,to:m.to,promotion:m.promotion||'q'});
-  const score=minimax(depth,-Infinity,Infinity,false);
-  game.undo();
-
-  const adjusted=score+(Math.random()*8);
-
-  if(adjusted>best){
-   best=adjusted;
-   candidates=[m];
-  }else if(adjusted>=best-10){
-   candidates.push(m);
+  function saveClockSnapshot() {
+    clockSnapshots.push({
+      white:whiteSeconds,
+      black:blackSeconds,
+      active:activeClock
+    });
   }
- }
 
- const chosen=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];
- const mover=game.turn();
+  function makeMove(move) {
+    if (!running || finished) return false;
 
- const result=game.move({
-  from:chosen.from,
-  to:chosen.to,
-  promotion:chosen.promotion||'q'
- });
+    // زمان حرکت بازیکن را تا همین لحظه دقیق حساب کن.
+    chargeClock();
+    if (finished) return false;
 
- if(result){
-  lastMove={from:result.from,to:result.to};
-  addIncrement(mover);
- }
+    // برای برگشت حرکت، زمان قبل از انجام حرکت ذخیره می‌شود.
+    saveClockSnapshot();
 
- thinking=false;
- selected=null;
- targets=[];
- render();
+    const mover = game.turn();
 
- if(game.game_over()){
-  gameActive=false;
-  stopTimer();
+    let result;
+    try {
+      result = game.move(move);
+    } catch (error) {
+      result = null;
+    }
 
-  finishGame(game.in_checkmate()
-   ?'مات! '+(game.turn()==='w'?'سیاه':'سفید')+' برنده شد. 🏆'
-   :'بازی مساوی شد. 🤝');
- }
+    if (!result) {
+      clockSnapshots.pop();
+      render();
+      return false;
+    }
+
+    selectedSquare = null;
+    legalTargets = [];
+    lastMove = {from:result.from, to:result.to};
+
+    // اضافه‌زمان فقط به بازیکنی تعلق می‌گیرد که حرکت کرده است.
+    if (timed && incrementSeconds > 0) {
+      setRemaining(mover, remaining(mover) + incrementSeconds);
+    }
+
+    activeClock = game.turn();
+    turnStartedAt = currentTime();
+
+    render();
+
+    if (game.game_over()) {
+      checkGameEnd();
+      return true;
+    }
+
+    if (mode === "ai" && game.turn() === "b") {
+      aiMove();
+    }
+
+    return true;
+  }
+
+  function evaluatePosition() {
+    if (game.in_checkmate()) {
+      return game.turn() === "b" ? -100000 : 100000;
+    }
+
+    if (game.in_draw() || game.game_over()) return 0;
+
+    let score = 0;
+    const board = game.board();
+
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = board[r][c];
+        if (!piece) continue;
+
+        const value = pieceValues[piece.type] || 0;
+        score += piece.color === "b" ? value : -value;
+      }
+    }
+
+    return score;
+  }
+
+  function minimax(depth, alpha, beta, maximizingBlack) {
+    if (depth <= 0 || game.game_over()) {
+      return evaluatePosition();
+    }
+
+    const moves = game.moves({verbose:true});
+
+    if (maximizingBlack) {
+      let best = -Infinity;
+
+      for (const move of moves) {
+        game.move({
+          from:move.from,
+          to:move.to,
+          promotion:move.promotion || "q"
+        });
+
+        best = Math.max(
+          best,
+          minimax(depth - 1, alpha, beta, false)
+        );
+
+        game.undo();
+        alpha = Math.max(alpha, best);
+
+        if (beta <= alpha) break;
+      }
+
+      return best;
+    } else {
+      let best = Infinity;
+
+      for (const move of moves) {
+        game.move({
+          from:move.from,
+          to:move.to,
+          promotion:move.promotion || "q"
+        });
+
+        best = Math.min(
+          best,
+          minimax(depth - 1, alpha, beta, true)
+        );
+
+        game.undo();
+        beta = Math.min(beta, best);
+
+        if (beta <= alpha) break;
+      }
+
+      return best;
+    }
+  }
+
+  function aiMove() {
+    if (!running || finished || game.turn() !== "b" || mode !== "ai") return;
+
+    const token = ++aiToken;
+    updateStatus();
+
+    // ساعت مشکی هنگام فکر کردن هم در حال کم شدن است.
+    setTimeout(() => {
+      if (token !== aiToken || !running || finished ||
+          game.turn() !== "b" || mode !== "ai") return;
+
+      const moves = game.moves({verbose:true});
+      if (!moves.length) {
+        checkGameEnd();
+        return;
+      }
+
+      let chosen;
+
+      if (difficulty === "easy") {
+        chosen = moves[Math.floor(Math.random() * moves.length)];
+      } else {
+        const depth = difficulty === "hard" ? 3 : 2;
+        let bestScore = -Infinity;
+        let candidates = [];
+
+        for (const move of moves) {
+          game.move({
+            from:move.from,
+            to:move.to,
+            promotion:move.promotion || "q"
+          });
+
+          const score = minimax(
+            depth - 1,
+            -Infinity,
+            Infinity,
+            game.turn() === "b"
+          );
+
+          game.undo();
+
+          if (score > bestScore) {
+            bestScore = score;
+            candidates = [move];
+          } else if (score === bestScore) {
+            candidates.push(move);
+          }
+        }
+
+        chosen = candidates[
+          Math.floor(Math.random() * candidates.length)
+        ];
+      }
+
+      if (chosen) {
+        makeMove({
+          from:chosen.from,
+          to:chosen.to,
+          promotion:chosen.promotion || "q"
+        });
+      }
+    }, 180);
+  }
+
+  function checkGameEnd() {
+    if (game.in_checkmate()) {
+      finishGame(
+        game.turn() === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
+        "کیش و مات!"
+      );
+    } else if (game.in_draw()) {
+      finishGame("بازی مساوی شد!", "موقعیت مساوی یا قانون مساوی اعمال شد.");
+    } else if (game.game_over()) {
+      finishGame("پایان مسابقه", "بازی به پایان رسید.");
+    }
+  }
+
+  function finishGame(title, message) {
+    if (finished) return;
+
+    finished = true;
+    running = false;
+    turnStartedAt = 0;
+    aiToken++;
+
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+
+    renderClocks();
+    updateStatus();
+
+    $("endTitle").textContent = title;
+    $("endMessage").textContent = message;
+    $("endOverlay").classList.remove("hidden");
+    $("undoBtn").disabled = false;
+  }
+
+  function beginGame() {
+    if (typeof Chess === "undefined") {
+      alert("کتابخانه شطرنج بارگذاری نشده. اتصال اینترنت رو بررسی کن.");
+      return;
+    }
+
+    aiToken++;
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+
+    game = new Chess();
+    selectedSquare = null;
+    legalTargets = [];
+    lastMove = null;
+    flipped = false;
+    running = true;
+    finished = false;
+    pendingPromotion = null;
+    clockSnapshots = [];
+
+    mode = $("startMode").value;
+    difficulty = $("difficulty").value;
+
+    const selectedTime = Number($("timeControl").value);
+    timed = selectedTime !== 0;
+
+    if (selectedTime === 182) {
+      baseSeconds = 180;
+      incrementSeconds = 2;
+    } else if (selectedTime === 303) {
+      baseSeconds = 300;
+      incrementSeconds = 3;
+    } else if (selectedTime === 910) {
+      baseSeconds = 900;
+      incrementSeconds = 10;
+    } else {
+      baseSeconds = selectedTime;
+      incrementSeconds = 0;
+    }
+
+    whiteSeconds = baseSeconds;
+    blackSeconds = baseSeconds;
+    activeClock = "w";
+    turnStartedAt = currentTime();
+
+    $("setupOverlay").classList.add("hidden");
+    $("endOverlay").classList.add("hidden");
+    $("promotionModal").classList.add("hidden");
+
+    $("whiteName").textContent = mode === "ai" ? "شما · سفید" : "بازیکن اول · سفید";
+    $("blackName").textContent = mode === "ai" ? "هوش مصنوعی · مشکی" : "بازیکن دوم · مشکی";
+    $("whiteSub").textContent = mode === "ai" ? "مهره‌های سفید" : "مهره‌های سفید";
+    $("blackSub").textContent = mode === "ai"
+      ? "درجه سختی: " + (difficulty === "easy" ? "آسان" : difficulty === "medium" ? "متوسط" : "سخت")
+      : "مهره‌های مشکی";
+
+    render();
+
+    // تایمر کوتاه و پرتکرار است، اما محاسبه زمان با اختلاف ساعت واقعی انجام می‌شود.
+    clockInterval = setInterval(() => {
+      if (!running || finished || !timed) return;
+      chargeClock();
+      renderClocks();
+    }, 100);
+  }
+
+  function undoMove() {
+    if (!game.history().length || pendingPromotion) return;
+
+    aiToken++;
+    $("promotionModal").classList.add("hidden");
+    pendingPromotion = null;
+
+    // زمان جاری را پیش از برگشت محاسبه کن.
+    chargeClock();
+    if (finished && remaining(activeClock) <= 0) return;
+
+    const undoCount = mode === "ai" && game.history().length >= 2 ? 2 : 1;
+    let snapshot = null;
+
+    for (let i = 0; i < undoCount; i++) {
+      if (!game.history().length) break;
+
+      snapshot = clockSnapshots.pop() || snapshot;
+      game.undo();
+    }
+
+    if (snapshot) {
+      whiteSeconds = snapshot.white;
+      blackSeconds = snapshot.black;
+    }
+
+    finished = false;
+    running = true;
+    $("endOverlay").classList.add("hidden");
+
+    selectedSquare = null;
+    legalTargets = [];
+
+    const hist = game.history({verbose:true});
+    lastMove = hist.length
+      ? {from:hist[hist.length - 1].from, to:hist[hist.length - 1].to}
+      : null;
+
+    activeClock = game.turn();
+    turnStartedAt = currentTime();
+
+    render();
+  }
+
+  function showSetup() {
+    running = false;
+    finished = false;
+    aiToken++;
+    turnStartedAt = 0;
+
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+
+    $("endOverlay").classList.add("hidden");
+    $("promotionModal").classList.add("hidden");
+    $("setupOverlay").classList.remove("hidden");
+    renderClocks();
+  }
+
+  $("startBtn").addEventListener("click", beginGame);
+  $("overlayStartBtn").addEventListener("click", beginGame);
+  $("newBtn").addEventListener("click", showSetup);
+  $("undoBtn").addEventListener("click", undoMove);
+
+  $("flipBtn").addEventListener("click", () => {
+    flipped = !flipped;
+    render();
+  });
+
+  $("startMode").addEventListener("change", () => {
+    $("difficultyField").classList.toggle(
+      "hidden",
+      $("startMode").value !== "ai"
+    );
+  });
+
+  $("againBtn").addEventListener("click", beginGame);
+  $("closeEndBtn").addEventListener("click", () => {
+    $("endOverlay").classList.add("hidden");
+  });
+
+  render();
+  renderClocks();
 }
-
-function finishGame(message){
- gameActive=false;
- thinking=false;
- stopTimer();
- updateClocks();
- updateStatus();
- $('endText').textContent=message;
- endOverlay.classList.remove('hidden');
-}
-
-function beginGame(){
- gameToken++;
- game.reset();
-
- selected=null;
- targets=[];
- lastMove=null;
- thinking=false;
- pendingPromotion=null;
-
- promotionModal.classList.add('hidden');
- endOverlay.classList.add('hidden');
-
- difficulty=Number($('difficulty').value);
-
- const time=$('timeControl').value.split(',').map(Number);
- baseSeconds=time[0];
- incrementSeconds=time[1];
-
- whiteRemaining=baseSeconds*1000;
- blackRemaining=baseSeconds*1000;
-
- $('mode').value=$('startMode').value;
-
- gameActive=true;
- setupOverlay.classList.add('hidden');
-
- render();
- startTimer();
-}
-
-function undoMove(){
- if(!gameActive||thinking||pendingPromotion||!game.history().length)return;
-
- stopTimer();
-
- game.undo();
-
- /* در برگشت حرکت، زمان اضافی به هیچ بازیکنی داده نمی‌شود. */
- if($('mode').value==='ai'&&game.history().length&&game.turn()==='b'){
-  game.undo();
- }
-
- const history=game.history({verbose:true});
-
- lastMove=history.length
- ?{from:history[history.length-1].from,to:history[history.length-1].to}
- :null;
-
- selected=null;
- targets=[];
-
- render();
- startTimer();
-}
-
-function showSetup(){
- gameActive=false;
- thinking=false;
- pendingPromotion=null;
- gameToken++;
-
- stopTimer();
- promotionModal.classList.add('hidden');
- endOverlay.classList.add('hidden');
- setupOverlay.classList.remove('hidden');
-
- updateClocks();
-}
-
-$('startBtn').addEventListener('click',beginGame);
-$('newBtn').addEventListener('click',showSetup);
-$('undoBtn').addEventListener('click',undoMove);
-$('againBtn').addEventListener('click',showSetup);
-$('closeEndBtn').addEventListener('click',()=>{
- endOverlay.classList.add('hidden');
-});
-
-$('mode').addEventListener('change',()=>{
- $('startMode').value=$('mode').value;
-});
-
-render();
-updateClocks();
-})();
 </script>
 </body>
 </html>
