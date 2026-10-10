@@ -6,22 +6,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TAHA CHESS</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+
 <style>
 :root{
-  --bg:#10141c;--panel:#1b2230;--panel2:#252f40;
-  --text:#f4f6fb;--muted:#a7b0c0;--accent:#55d6a2;
-  --light:#e8edf3;--dark:#72917d;--yellow:#f6d365;--red:#ff6878;
+  --bg:#10141c;
+  --panel:#1b2230;
+  --panel2:#252f40;
+  --text:#f4f6fb;
+  --muted:#a7b0c0;
+  --accent:#55d6a2;
+  --light:#e8edf3;
+  --dark:#72917d;
+  --yellow:#f6d365;
+  --red:#ff6878;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;background:radial-gradient(ellipse at top,#202a3a,var(--bg) 65%);
-  color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh
+  margin:0;
+  background:radial-gradient(ellipse at top,#202a3a,var(--bg) 65%);
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+  min-height:100vh
 }
 button,select{font:inherit}
 button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.45;cursor:not-allowed}
 header{text-align:center;padding:20px 12px 12px}
-.logo{font-size:clamp(28px,6vw,42px);font-weight:900;letter-spacing:3px;color:var(--accent)}
+.logo{
+  font-size:clamp(28px,6vw,42px);
+  font-weight:900;letter-spacing:3px;color:var(--accent)
+}
 .subtitle{color:var(--muted);font-size:13px;margin-top:8px}
 main{
   width:min(1100px,100%);margin:auto;padding:14px;
@@ -29,12 +43,14 @@ main{
   gap:18px;align-items:start
 }
 .panel{
-  background:var(--panel);border:1px solid #ffffff12;border-radius:18px;
-  padding:15px;box-shadow:0 14px 40px #0003;min-width:0
+  background:var(--panel);border:1px solid #ffffff12;
+  border-radius:18px;padding:15px;
+  box-shadow:0 14px 40px #0003;min-width:0
 }
 .player{
   display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:11px 13px;background:var(--panel2);border-radius:12px;margin-bottom:10px
+  padding:11px 13px;background:var(--panel2);
+  border-radius:12px;margin-bottom:10px
 }
 .player-name{font-weight:bold}
 .player-sub{font-size:12px;color:var(--muted);margin-top:5px}
@@ -48,12 +64,14 @@ main{
 }
 .clock{
   direction:ltr;font-family:monospace;font-weight:bold;
-  font-size:clamp(20px,4vw,30px);background:#111722;padding:7px 12px;
-  min-width:100px;text-align:center;border-radius:9px;border:1px solid #ffffff14
+  font-size:clamp(20px,4vw,30px);background:#111722;
+  padding:7px 12px;min-width:100px;text-align:center;
+  border-radius:9px;border:1px solid #ffffff14
 }
 .clock.active{color:var(--accent);border-color:var(--accent)}
 .clock.low{color:var(--red)}
 .clock.no-time{font-size:16px;color:var(--muted)}
+
 #board{
   width:100%;aspect-ratio:1;display:grid;
   grid-template-columns:repeat(8,minmax(0,1fr));
@@ -61,8 +79,9 @@ main{
   user-select:none;direction:ltr
 }
 .square{
-  border:0;padding:0;position:relative;display:flex;align-items:center;
-  justify-content:center;aspect-ratio:1;min-width:0
+  border:0;padding:0;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  aspect-ratio:1;min-width:0;overflow:hidden
 }
 .square.light{background:var(--light)}
 .square.dark{background:var(--dark)}
@@ -79,10 +98,72 @@ main{
 }
 .piece{
   z-index:1;font-family:"DejaVu Sans","Arial Unicode MS",serif;
-  font-size:clamp(27px,6.8vw,58px);line-height:1;pointer-events:none
+  font-size:clamp(27px,6.8vw,58px);
+  line-height:1;pointer-events:none;position:relative
 }
 .piece.white{color:#fff;text-shadow:1px 2px 2px #000,0 0 2px #000}
 .piece.black{color:#171b22;text-shadow:0 1px 1px #ffffff66}
+
+/* افکت ویژهٔ کیش‌ومات */
+.square.mated{
+  background:#9e4854!important;
+  box-shadow:inset 0 0 0 3px #ff9ba5;
+  z-index:2
+}
+.square.mated .piece{
+  animation:kingDefeat 1.25s ease-in-out both;
+  transform-origin:center
+}
+.square.mated::before{
+  content:"♛";
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:1%;
+  font-size:clamp(17px,3.6vw,31px);
+  color:#f6d365;
+  text-shadow:0 2px 8px #0009;
+  pointer-events:none;
+  animation:crownBreak 1.2s ease-out both
+}
+.square.mated::after{
+  content:"✦";
+  position:absolute;
+  z-index:4;
+  left:72%;
+  top:8%;
+  font-size:clamp(10px,2vw,18px);
+  color:#f6d365;
+  pointer-events:none;
+  animation:crownShard 1.1s ease-out both
+}
+@keyframes kingDefeat{
+  0%{transform:translateY(0) rotate(0) scale(1);filter:brightness(1)}
+  22%{transform:translateY(-3px) rotate(-5deg) scale(1.08);filter:brightness(1.35)}
+  42%{transform:translateY(0) rotate(4deg) scale(1.02)}
+  65%{transform:translateY(2px) rotate(-2deg) scale(.98)}
+  100%{transform:translateY(0) rotate(0) scale(1);filter:brightness(1)}
+}
+@keyframes crownBreak{
+  0%{opacity:0;transform:translate(-50%,8px) scale(.5) rotate(0)}
+  25%{opacity:1;transform:translate(-50%,-8px) scale(1.15) rotate(-8deg)}
+  55%{opacity:1;transform:translate(-68%,-17px) scale(.9) rotate(-23deg)}
+  100%{opacity:0;transform:translate(-85%,-25px) scale(.65) rotate(-35deg)}
+}
+@keyframes crownShard{
+  0%{opacity:0;transform:translate(0,0) rotate(0) scale(.5)}
+  25%{opacity:1;transform:translate(0,-5px) rotate(15deg) scale(1.2)}
+  100%{opacity:0;transform:translate(13px,-22px) rotate(70deg) scale(.6)}
+}
+@media(prefers-reduced-motion:reduce){
+  .square.mated .piece,
+  .square.mated::before,
+  .square.mated::after{
+    animation:none
+  }
+  .square.mated::before{opacity:.65}
+}
+
 .coordinates{
   position:absolute;font-size:clamp(8px,1.6vw,12px);
   font-weight:bold;z-index:2;pointer-events:none;opacity:.8
@@ -91,21 +172,43 @@ main{
 .coord-rank{top:2px;right:4px}
 .square.light .coordinates{color:#40564a}
 .square.dark .coordinates{color:#f3f5f7}
+
 #status{
   text-align:center;color:var(--muted);min-height:42px;
   padding:13px 4px 4px;font-size:14px;line-height:1.8
 }
-.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+#status.result{
+  color:var(--accent);font-weight:bold;
+  font-size:clamp(15px,3vw,19px);
+  padding-top:15px
+}
+.result-detail{
+  text-align:center;color:var(--muted);
+  font-size:12px;line-height:1.8;margin:0 0 10px
+}
+.end-actions{
+  display:none;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;margin-top:10px
+}
+.end-actions.visible{display:grid}
+.actions{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;margin-top:10px
+}
 .btn{
-  padding:11px 8px;border:0;border-radius:10px;font-weight:bold;
-  color:var(--text);background:#303b4d
+  padding:11px 8px;border:0;border-radius:10px;
+  font-weight:bold;color:var(--text);background:#303b4d
 }
 .btn:hover{filter:brightness(1.13)}
 .btn.primary{background:var(--accent);color:#10231c}
 .btn.danger{background:#743b47}
+
 .side-title{font-weight:bold;font-size:17px;margin:3px 0 15px}
 .note{color:var(--muted);font-size:12px;line-height:1.9}
-.moves{max-height:320px;overflow:auto;background:#111722;border-radius:10px;padding:8px}
+.moves{
+  max-height:320px;overflow:auto;
+  background:#111722;border-radius:10px;padding:8px
+}
 .move-row{
   display:grid;grid-template-columns:36px 1fr 1fr;
   gap:6px;padding:7px;border-bottom:1px solid #ffffff0d;font-size:13px
@@ -113,6 +216,7 @@ main{
 .move-num{color:var(--muted)}
 .move-cell{text-align:center}
 .footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+
 .overlay{
   position:fixed;inset:0;background:#080b10eF;z-index:10;
   display:flex;justify-content:center;align-items:center;
@@ -124,16 +228,25 @@ main{
   border-radius:20px;padding:24px;box-shadow:0 20px 80px #0008
 }
 .modal h2{margin:0 0 10px;text-align:center}
-.modal p{color:var(--muted);font-size:13px;line-height:1.9;text-align:center}
+.modal p{
+  color:var(--muted);font-size:13px;
+  line-height:1.9;text-align:center
+}
 .field{margin-bottom:14px}
-.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}
+.field label{
+  display:block;color:var(--muted);
+  font-size:13px;margin-bottom:7px
+}
 .field select{
   width:100%;padding:11px;background:#111722;
   border:1px solid #ffffff20;border-radius:10px;color:var(--text)
 }
 .modal .btn{width:100%;margin-top:10px}
 .hidden{display:none!important}
-.promo-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
+.promo-options{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;margin-top:15px
+}
 .promo-piece{
   background:var(--panel2);border:1px solid #ffffff18;
   border-radius:12px;font-size:38px;padding:10px 0;color:white
@@ -149,9 +262,11 @@ main{
   .clock-label{font-size:10px}
   .player-name{font-size:13px}
   .player-sub{font-size:11px}
+  .actions .btn,.end-actions .btn{font-size:12px;padding:10px 4px}
 }
 </style>
 </head>
+
 <body>
 <header>
   <div class="logo">TAHA CHESS</div>
@@ -173,8 +288,14 @@ main{
 
     <div id="board" aria-label="صفحه شطرنج"></div>
     <div id="status">برای شروع مسابقه، تنظیماتت رو انتخاب کن.</div>
+    <div id="resultDetail" class="result-detail"></div>
 
-    <div class="player">
+    <div class="end-actions" id="endActions">
+      <button class="btn primary" id="restartBtn" type="button">بازی دوباره ♟</button>
+      <button class="btn" id="settingsBtn" type="button">بازگشت به تنظیمات</button>
+    </div>
+
+    <div class="player" style="margin-top:10px">
       <div>
         <div class="player-name" id="whiteName">مهره‌های سفید</div>
         <div class="player-sub" id="whiteSub">بازیکن اول</div>
@@ -263,15 +384,6 @@ main{
   </div>
 </div>
 
-<div class="overlay hidden" id="endOverlay">
-  <div class="modal">
-    <h2 id="endTitle">پایان مسابقه</h2>
-    <p id="endMessage"></p>
-    <button class="btn primary" id="againBtn" type="button">بازی دوباره</button>
-    <button class="btn" id="closeEndBtn" type="button">بستن</button>
-  </div>
-</div>
-
 <script>
 "use strict";
 
@@ -340,6 +452,7 @@ function initializeChess() {
     if (whole < 10 && seconds > 0) {
       return `${minutes}:${String(secs).padStart(2,"0")}.${tenths}`;
     }
+
     return `${minutes}:${String(secs).padStart(2,"0")}`;
   }
 
@@ -354,6 +467,7 @@ function initializeChess() {
       600: "Rapid · 10+0",
       910: "Rapid · 15+10"
     };
+
     return labels[value] || "Chess";
   }
 
@@ -369,9 +483,11 @@ function initializeChess() {
     if (remaining(activeClock) <= 0) {
       setRemaining(activeClock, 0);
       renderClocks();
+
       finishGame(
         activeClock === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
-        "زمان بازیکن تمام شد."
+        "زمان بازیکن تمام شد.",
+        "timeout"
       );
     }
   }
@@ -384,6 +500,7 @@ function initializeChess() {
       "active",
       running && !finished && activeClock === "w" && timed
     );
+
     b.classList.toggle(
       "active",
       running && !finished && activeClock === "b" && timed
@@ -397,6 +514,25 @@ function initializeChess() {
 
     w.textContent = timed ? formatTime(whiteSeconds) : "∞ بدون زمان";
     b.textContent = timed ? formatTime(blackSeconds) : "∞ بدون زمان";
+  }
+
+  function getMatedKingSquare() {
+    if (!game.in_checkmate()) return null;
+
+    const loser = game.turn();
+    const board = game.board();
+
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+
+        if (piece && piece.type === "k" && piece.color === loser) {
+          return String.fromCharCode(97 + col) + (8 - row);
+        }
+      }
+    }
+
+    return null;
   }
 
   function render() {
@@ -414,6 +550,7 @@ function initializeChess() {
       : [8,7,6,5,4,3,2,1];
 
     const checked = game.in_check() ? game.turn() : null;
+    const matedSquare = getMatedKingSquare();
 
     for (let ri = 0; ri < 8; ri++) {
       for (let fi = 0; fi < 8; fi++) {
@@ -429,7 +566,9 @@ function initializeChess() {
         btn.className =
           "square " + ((rank + col) % 2 === 1 ? "dark" : "light");
 
-        if (selectedSquare === sq) btn.classList.add("selected");
+        if (selectedSquare === sq) {
+          btn.classList.add("selected");
+        }
 
         if (lastMove && (lastMove.from === sq || lastMove.to === sq)) {
           btn.classList.add("last");
@@ -437,6 +576,11 @@ function initializeChess() {
 
         if (piece && piece.type === "k" && piece.color === checked) {
           btn.classList.add("check");
+        }
+
+        if (sq === matedSquare) {
+          btn.classList.remove("check");
+          btn.classList.add("mated");
         }
 
         const target = legalTargets.find(m => m.to === sq);
@@ -476,20 +620,24 @@ function initializeChess() {
     updateStatus();
     updateHistory();
 
-    $("undoBtn").disabled = game.history().length === 0;
+    $("undoBtn").disabled = game.history().length === 0 || !running;
   }
 
   function updateStatus() {
-    if (!running && !finished) {
-      $("status").textContent =
+    const status = $("status");
+
+    if (finished) return;
+
+    status.classList.remove("result");
+
+    if (!running) {
+      status.textContent =
         "برای شروع مسابقه، تنظیماتت رو انتخاب کن.";
       return;
     }
 
-    if (finished) return;
-
     if (game.in_checkmate()) {
-      $("status").textContent = "کیش و مات!";
+      status.textContent = "کیش و مات!";
       return;
     }
 
@@ -504,7 +652,7 @@ function initializeChess() {
 
     if (!timed) message += " · بدون محدودیت زمانی";
 
-    $("status").textContent = message;
+    status.textContent = message;
   }
 
   function updateHistory() {
@@ -559,6 +707,7 @@ function initializeChess() {
             from: selectedSquare,
             to: sq
           };
+
           showPromotionChoices();
           return;
         }
@@ -567,6 +716,7 @@ function initializeChess() {
           from: selectedSquare,
           to: sq
         });
+
         return;
       }
     }
@@ -791,7 +941,6 @@ function initializeChess() {
   }
 
   function chooseBulletEasyMove(moves) {
-    // انتخاب سریع در Bullet برای جلوگیری از محاسبات اضافی
     const captures = moves.filter(m => m.captured);
 
     if (captures.length && Math.random() < 0.65) {
@@ -904,18 +1053,29 @@ function initializeChess() {
 
   function checkGameEnd() {
     if (game.in_checkmate()) {
+      const winner = game.turn() === "w" ? "مشکی" : "سفید";
+
       finishGame(
-        game.turn() === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
-        "کیش و مات!"
+        `کیش‌ومات! ${winner} برنده شد!`,
+        "شاه مات‌شده رو روی صفحه ببین؛ آخرین حرکت هم مشخصه.",
+        "checkmate"
       );
     } else if (game.in_draw()) {
-      finishGame("بازی مساوی شد!", "بازی مساوی شد.");
+      finishGame(
+        "بازی مساوی شد!",
+        "هیچ برنده‌ای در این مسابقه وجود نداره.",
+        "draw"
+      );
     } else if (game.game_over()) {
-      finishGame("پایان مسابقه", "بازی به پایان رسید.");
+      finishGame(
+        "پایان مسابقه",
+        "بازی به پایان رسید.",
+        "other"
+      );
     }
   }
 
-  function finishGame(title, message) {
+  function finishGame(title, message, reason) {
     if (finished) return;
 
     finished = true;
@@ -928,11 +1088,31 @@ function initializeChess() {
       clockInterval = null;
     }
 
+    selectedSquare = null;
+    legalTargets = [];
+
+    $("promotionModal").classList.add("hidden");
+    $("status").textContent = title;
+    $("status").classList.add("result");
+    $("resultDetail").textContent = message;
+    $("endActions").classList.add("visible");
+
+    // صفحه حفظ می‌شود و انیمیشن شاه مات‌شده نمایش داده می‌شود.
+    render();
     renderClocks();
 
-    $("endTitle").textContent = title;
-    $("endMessage").textContent = message;
-    $("endOverlay").classList.remove("hidden");
+    // پیام نتیجه پس از render دوباره تنظیم می‌شود.
+    $("status").textContent = title;
+    $("status").classList.add("result");
+
+    if (reason === "checkmate") {
+      $("resultDetail").textContent =
+        "کیش‌ومات! شاه مات‌شده و آخرین حرکت روی صفحه مشخص هستند.";
+    } else {
+      $("resultDetail").textContent = message;
+    }
+
+    $("undoBtn").disabled = true;
   }
 
   function beginGame() {
@@ -944,6 +1124,7 @@ function initializeChess() {
     }
 
     game = new Chess();
+
     selectedSquare = null;
     legalTargets = [];
     lastMove = null;
@@ -987,8 +1168,11 @@ function initializeChess() {
     $("blackTimeLabel").textContent = timeLabel;
 
     $("setupOverlay").classList.add("hidden");
-    $("endOverlay").classList.add("hidden");
     $("promotionModal").classList.add("hidden");
+    $("endActions").classList.remove("visible");
+
+    $("status").classList.remove("result");
+    $("resultDetail").textContent = "";
 
     $("whiteName").textContent = mode === "ai"
       ? (humanColor === "w" ? "شما · سفید" : "هوش مصنوعی · سفید")
@@ -1014,6 +1198,7 @@ function initializeChess() {
 
     clockInterval = setInterval(() => {
       if (!running || finished || !timed) return;
+
       chargeClock();
       renderClocks();
     }, 100);
@@ -1024,7 +1209,7 @@ function initializeChess() {
   }
 
   function undoMove() {
-    if (!game.history().length || pendingPromotion) return;
+    if (!game.history().length || pendingPromotion || !running) return;
 
     aiToken++;
     $("promotionModal").classList.add("hidden");
@@ -1032,7 +1217,7 @@ function initializeChess() {
 
     chargeClock();
 
-    if (finished && remaining(activeClock) <= 0) return;
+    if (finished) return;
 
     const count = mode === "ai" &&
       game.turn() === humanColor &&
@@ -1057,7 +1242,9 @@ function initializeChess() {
     finished = false;
     running = true;
 
-    $("endOverlay").classList.add("hidden");
+    $("endActions").classList.remove("visible");
+    $("status").classList.remove("result");
+    $("resultDetail").textContent = "";
 
     selectedSquare = null;
     legalTargets = [];
@@ -1080,6 +1267,7 @@ function initializeChess() {
 
     clockInterval = setInterval(() => {
       if (!running || finished || !timed) return;
+
       chargeClock();
       renderClocks();
     }, 100);
@@ -1100,9 +1288,12 @@ function initializeChess() {
       clockInterval = null;
     }
 
-    $("endOverlay").classList.add("hidden");
     $("promotionModal").classList.add("hidden");
     $("setupOverlay").classList.remove("hidden");
+    $("endActions").classList.remove("visible");
+
+    $("status").classList.remove("result");
+    $("resultDetail").textContent = "";
 
     renderClocks();
   }
@@ -1124,11 +1315,8 @@ function initializeChess() {
   });
 
   $("startMode").addEventListener("change", syncModeFields);
-  $("againBtn").addEventListener("click", beginGame);
-
-  $("closeEndBtn").addEventListener("click", () => {
-    $("endOverlay").classList.add("hidden");
-  });
+  $("restartBtn").addEventListener("click", beginGame);
+  $("settingsBtn").addEventListener("click", showSetup);
 
   syncModeFields();
   render();
