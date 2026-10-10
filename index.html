@@ -18,7 +18,7 @@ body{
   color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh
 }
 button,select{font:inherit}
-button{cursor:pointer}
+button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.45;cursor:not-allowed}
 header{text-align:center;padding:20px 12px 12px}
 .logo{font-size:clamp(28px,6vw,42px);font-weight:900;letter-spacing:3px;color:var(--accent)}
@@ -47,8 +47,10 @@ main{
 .clock.low{color:var(--red)}
 .clock.no-time{font-size:16px;color:var(--muted)}
 #board{
-  width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
-  overflow:hidden;border-radius:5px;border:3px solid #0d1118;user-select:none
+  width:100%;aspect-ratio:1;display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  overflow:hidden;border-radius:5px;border:3px solid #0d1118;
+  user-select:none;direction:ltr
 }
 .square{
   border:0;padding:0;position:relative;display:flex;align-items:center;
@@ -60,10 +62,12 @@ main{
 .square.last{background:#d4ce69}
 .square.check{background:#df6a73}
 .square.legal:after{
-  content:"";position:absolute;width:23%;height:23%;border-radius:50%;background:#17221f66
+  content:"";position:absolute;width:23%;height:23%;
+  border-radius:50%;background:#17221f66
 }
 .square.capture:after{
-  content:"";position:absolute;inset:4%;border:5px solid #17221f66;border-radius:50%
+  content:"";position:absolute;inset:4%;
+  border:5px solid #17221f66;border-radius:50%
 }
 .piece{
   z-index:1;font-family:"DejaVu Sans","Arial Unicode MS",serif;
@@ -71,45 +75,61 @@ main{
 }
 .piece.white{color:#fff;text-shadow:1px 2px 2px #000,0 0 2px #000}
 .piece.black{color:#171b22;text-shadow:0 1px 1px #ffffff66}
-.coordinates{position:absolute;font-size:clamp(8px,1.6vw,12px);font-weight:bold;z-index:2;pointer-events:none;opacity:.8}
+.coordinates{
+  position:absolute;font-size:clamp(8px,1.6vw,12px);
+  font-weight:bold;z-index:2;pointer-events:none;opacity:.8
+}
 .coord-file{bottom:2px;left:4px}
 .coord-rank{top:2px;right:4px}
 .square.light .coordinates{color:#40564a}
 .square.dark .coordinates{color:#f3f5f7}
-#status{text-align:center;color:var(--muted);min-height:42px;padding:13px 4px 4px;font-size:14px;line-height:1.8}
+#status{
+  text-align:center;color:var(--muted);min-height:42px;
+  padding:13px 4px 4px;font-size:14px;line-height:1.8
+}
 .actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
-.btn{padding:11px 8px;border:0;border-radius:10px;font-weight:bold;color:var(--text);background:#303b4d}
+.btn{
+  padding:11px 8px;border:0;border-radius:10px;font-weight:bold;
+  color:var(--text);background:#303b4d
+}
 .btn:hover{filter:brightness(1.13)}
 .btn.primary{background:var(--accent);color:#10231c}
 .btn.danger{background:#743b47}
 .side-title{font-weight:bold;font-size:17px;margin:3px 0 15px}
 .note{color:var(--muted);font-size:12px;line-height:1.9}
 .moves{max-height:320px;overflow:auto;background:#111722;border-radius:10px;padding:8px}
-.move-row{display:grid;grid-template-columns:36px 1fr 1fr;gap:6px;padding:7px;border-bottom:1px solid #ffffff0d;font-size:13px}
+.move-row{
+  display:grid;grid-template-columns:36px 1fr 1fr;
+  gap:6px;padding:7px;border-bottom:1px solid #ffffff0d;font-size:13px
+}
 .move-num{color:var(--muted)}
 .move-cell{text-align:center}
 .footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 .overlay{
   position:fixed;inset:0;background:#080b10eF;z-index:10;
-  display:flex;justify-content:center;align-items:center;padding:18px;overflow:auto
+  display:flex;justify-content:center;align-items:center;
+  padding:18px;overflow:auto
 }
 .modal{
   width:min(430px,100%);max-height:95vh;overflow:auto;
-  background:var(--panel);border:1px solid #ffffff1a;border-radius:20px;
-  padding:24px;box-shadow:0 20px 80px #0008
+  background:var(--panel);border:1px solid #ffffff1a;
+  border-radius:20px;padding:24px;box-shadow:0 20px 80px #0008
 }
 .modal h2{margin:0 0 10px;text-align:center}
 .modal p{color:var(--muted);font-size:13px;line-height:1.9;text-align:center}
 .field{margin-bottom:14px}
 .field label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}
 .field select{
-  width:100%;padding:11px;background:#111722;border:1px solid #ffffff20;
-  border-radius:10px;color:var(--text)
+  width:100%;padding:11px;background:#111722;
+  border:1px solid #ffffff20;border-radius:10px;color:var(--text)
 }
 .modal .btn{width:100%;margin-top:10px}
 .hidden{display:none!important}
 .promo-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
-.promo-piece{background:var(--panel2);border:1px solid #ffffff18;border-radius:12px;font-size:38px;padding:10px 0;color:white}
+.promo-piece{
+  background:var(--panel2);border:1px solid #ffffff18;
+  border-radius:12px;font-size:38px;padding:10px 0;color:white
+}
 @media(max-width:800px){
   main{grid-template-columns:1fr;max-width:620px}
   .panel{padding:12px}
@@ -161,7 +181,6 @@ main{
 
 <div class="footer">TAHA CHESS · Play fair, think smart.</div>
 
-<!-- تنظیمات فقط در صفحه شروع نمایش داده می‌شوند -->
 <div class="overlay" id="setupOverlay">
   <div class="modal">
     <h2>♟ TAHA CHESS</h2>
@@ -181,6 +200,14 @@ main{
         <option value="easy">آسان</option>
         <option value="medium" selected>متوسط</option>
         <option value="hard">سخت</option>
+      </select>
+    </div>
+
+    <div class="field" id="playerColorField">
+      <label for="playerColor">رنگ مهره‌های شما</label>
+      <select id="playerColor">
+        <option value="w" selected>سفید ♔</option>
+        <option value="b">مشکی ♚</option>
       </select>
     </div>
 
@@ -230,7 +257,8 @@ main{
 const $ = id => document.getElementById(id);
 
 if (typeof Chess === "undefined") {
-  $("status").textContent = "کتابخانه شطرنج بارگذاری نشد؛ اینترنت رو بررسی کن و صفحه رو دوباره بارگذاری کن.";
+  $("status").textContent =
+    "کتابخانه شطرنج بارگذاری نشد؛ اینترنت رو بررسی کن و صفحه رو دوباره بارگذاری کن.";
   $("overlayStartBtn").disabled = true;
 } else {
   initializeChess();
@@ -243,6 +271,7 @@ function initializeChess() {
     wk:"♔",wq:"♕",wr:"♖",wb:"♗",wn:"♘",wp:"♙",
     bk:"♚",bq:"♛",br:"♜",bb:"♝",bn:"♞",bp:"♟"
   };
+
   const values = {p:100,n:320,b:330,r:500,q:900,k:20000};
 
   let selectedSquare = null;
@@ -253,6 +282,8 @@ function initializeChess() {
   let finished = false;
   let mode = "ai";
   let difficulty = "medium";
+  let humanColor = "w";
+  let aiColor = "b";
   let timed = true;
   let baseSeconds = 600;
   let incrementSeconds = 0;
@@ -265,337 +296,727 @@ function initializeChess() {
   let pendingPromotion = null;
   let clockSnapshots = [];
 
-  function now(){return Date.now()}
-  function remaining(side){return side==="w"?whiteSeconds:blackSeconds}
-  function setRemaining(side,value){
-    if(side==="w")whiteSeconds=value;
-    else blackSeconds=value;
+  function now() {
+    return Date.now();
   }
-  function formatTime(seconds){
-    seconds=Math.max(0,seconds);
-    const whole=Math.ceil(seconds);
-    const minutes=Math.floor(whole/60);
-    const secs=whole%60;
-    const tenths=Math.floor((seconds%1)*10);
-    if(whole<10&&seconds>0)return `${minutes}:${String(secs).padStart(2,"0")}.${tenths}`;
+
+  function remaining(side) {
+    return side === "w" ? whiteSeconds : blackSeconds;
+  }
+
+  function setRemaining(side, value) {
+    if (side === "w") whiteSeconds = value;
+    else blackSeconds = value;
+  }
+
+  function formatTime(seconds) {
+    seconds = Math.max(0, seconds);
+    const whole = Math.ceil(seconds);
+    const minutes = Math.floor(whole / 60);
+    const secs = whole % 60;
+    const tenths = Math.floor((seconds % 1) * 10);
+
+    if (whole < 10 && seconds > 0) {
+      return `${minutes}:${String(secs).padStart(2,"0")}.${tenths}`;
+    }
     return `${minutes}:${String(secs).padStart(2,"0")}`;
   }
 
-  // محاسبه ساعت با زمان واقعی؛ از پرش ثانیه‌ها جلوگیری می‌کند.
-  function chargeClock(){
-    if(!running||finished||!timed||!turnStartedAt)return;
-    const time=now();
-    const elapsed=Math.max(0,(time-turnStartedAt)/1000);
-    setRemaining(activeClock,remaining(activeClock)-elapsed);
-    turnStartedAt=time;
+  function chargeClock() {
+    if (!running || finished || !timed || !turnStartedAt) return;
 
-    if(remaining(activeClock)<=0){
-      setRemaining(activeClock,0);
+    const time = now();
+    const elapsed = Math.max(0, (time - turnStartedAt) / 1000);
+    setRemaining(activeClock, remaining(activeClock) - elapsed);
+    turnStartedAt = time;
+
+    if (remaining(activeClock) <= 0) {
+      setRemaining(activeClock, 0);
       renderClocks();
-      finishGame(activeClock==="w"?"مشکی برنده شد!":"سفید برنده شد!","زمان بازیکن تمام شد.");
+      finishGame(
+        activeClock === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
+        "زمان بازیکن تمام شد."
+      );
     }
   }
 
-  function renderClocks(){
-    const w=$("whiteTime"),b=$("blackTime");
-    w.classList.toggle("active",running&&!finished&&activeClock==="w"&&timed);
-    b.classList.toggle("active",running&&!finished&&activeClock==="b"&&timed);
-    w.classList.toggle("low",timed&&whiteSeconds<=10&&whiteSeconds>0);
-    b.classList.toggle("low",timed&&blackSeconds<=10&&blackSeconds>0);
-    w.classList.toggle("no-time",!timed);
-    b.classList.toggle("no-time",!timed);
-    w.textContent=timed?formatTime(whiteSeconds):"∞ بدون زمان";
-    b.textContent=timed?formatTime(blackSeconds):"∞ بدون زمان";
+  function renderClocks() {
+    const w = $("whiteTime");
+    const b = $("blackTime");
+
+    w.classList.toggle("active", running && !finished && activeClock === "w" && timed);
+    b.classList.toggle("active", running && !finished && activeClock === "b" && timed);
+    w.classList.toggle("low", timed && whiteSeconds <= 10 && whiteSeconds > 0);
+    b.classList.toggle("low", timed && blackSeconds <= 10 && blackSeconds > 0);
+    w.classList.toggle("no-time", !timed);
+    b.classList.toggle("no-time", !timed);
+
+    w.textContent = timed ? formatTime(whiteSeconds) : "∞ بدون زمان";
+    b.textContent = timed ? formatTime(blackSeconds) : "∞ بدون زمان";
   }
 
-  function render(){
-    const board=$("board");
-    board.innerHTML="";
-    const matrix=game.board();
-    const files=flipped?["h","g","f","e","d","c","b","a"]:["a","b","c","d","e","f","g","h"];
-    const ranks=flipped?[1,2,3,4,5,6,7,8]:[8,7,6,5,4,3,2,1];
-    const checked=game.in_check()?game.turn():null;
+  function render() {
+    const board = $("board");
+    board.innerHTML = "";
 
-    for(let ri=0;ri<8;ri++){
-      for(let fi=0;fi<8;fi++){
-        const file=files[fi],rank=ranks[ri],sq=file+rank;
-        const row=8-rank,col=file.charCodeAt(0)-97;
-        const piece=matrix[row][col];
-        const btn=document.createElement("button");
-        btn.type="button";
-        btn.className="square "+((rank+col)%2===0?"dark":"light");
+    const matrix = game.board();
+    const files = flipped
+      ? ["h","g","f","e","d","c","b","a"]
+      : ["a","b","c","d","e","f","g","h"];
 
-        if(selectedSquare===sq)btn.classList.add("selected");
-        if(lastMove&&(lastMove.from===sq||lastMove.to===sq))btn.classList.add("last");
-        if(piece&&piece.type==="k"&&piece.color===checked)btn.classList.add("check");
+    const ranks = flipped
+      ? [1,2,3,4,5,6,7,8]
+      : [8,7,6,5,4,3,2,1];
 
-        const target=legalTargets.find(m=>m.to===sq);
-        if(target)btn.classList.add(game.get(sq)?"capture":"legal");
+    const checked = game.in_check() ? game.turn() : null;
 
-        if(piece){
-          const span=document.createElement("span");
-          span.className="piece "+(piece.color==="w"?"white":"black");
-          span.textContent=symbols[piece.color+piece.type];
+    for (let ri = 0; ri < 8; ri++) {
+      for (let fi = 0; fi < 8; fi++) {
+        const file = files[fi];
+        const rank = ranks[ri];
+        const sq = file + rank;
+        const row = 8 - rank;
+        const col = file.charCodeAt(0) - 97;
+        const piece = matrix[row][col];
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "square " + ((rank + col) % 2 === 1 ? "dark" : "light");
+
+        if (selectedSquare === sq) btn.classList.add("selected");
+        if (lastMove && (lastMove.from === sq || lastMove.to === sq)) {
+          btn.classList.add("last");
+        }
+        if (piece && piece.type === "k" && piece.color === checked) {
+          btn.classList.add("check");
+        }
+
+        const target = legalTargets.find(m => m.to === sq);
+        if (target) btn.classList.add(game.get(sq) ? "capture" : "legal");
+
+        if (piece) {
+          const span = document.createElement("span");
+          span.className = "piece " + (piece.color === "w" ? "white" : "black");
+          span.textContent = symbols[piece.color + piece.type];
           btn.appendChild(span);
         }
-        if(ri===7){
-          const c=document.createElement("span");
-          c.className="coordinates coord-file";c.textContent=file;btn.appendChild(c);
+
+        if (ri === 7) {
+          const c = document.createElement("span");
+          c.className = "coordinates coord-file";
+          c.textContent = file;
+          btn.appendChild(c);
         }
-        if(fi===0){
-          const c=document.createElement("span");
-          c.className="coordinates coord-rank";c.textContent=rank;btn.appendChild(c);
+
+        if (fi === 0) {
+          const c = document.createElement("span");
+          c.className = "coordinates coord-rank";
+          c.textContent = rank;
+          btn.appendChild(c);
         }
-        btn.addEventListener("click",()=>tapSquare(sq));
+
+        btn.addEventListener("click", () => tapSquare(sq));
         board.appendChild(btn);
       }
     }
+
     renderClocks();
     updateStatus();
     updateHistory();
-    $("undoBtn").disabled=game.history().length===0;
+    $("undoBtn").disabled = game.history().length === 0;
   }
 
-  function updateStatus(){
-    if(!running&&!finished){$("status").textContent="برای شروع مسابقه، تنظیماتت رو انتخاب کن.";return}
-    if(finished)return;
-    const side=game.turn()==="w"?"سفید":"مشکی";
-    let text=`نوبت ${side}`;
-    if(game.in_check())text+=" — کیش!";
-    if(mode==="ai"&&game.turn()==="b")text+=" — هوش مصنوعی در حال فکر کردنه...";
-    if(!timed)text+=" · بدون محدودیت زمانی";
-    $("status").textContent=text;
-  }
-
-  function updateHistory(){
-    const box=$("moves"),hist=game.history();
-    if(!hist.length){box.innerHTML='<div class="note">هنوز حرکتی انجام نشده.</div>';return}
-    box.innerHTML="";
-    for(let i=0;i<hist.length;i+=2){
-      const row=document.createElement("div");row.className="move-row";
-      const num=document.createElement("span");num.className="move-num";num.textContent=(Math.floor(i/2)+1)+".";
-      const w=document.createElement("span");w.className="move-cell";w.textContent=hist[i]||"";
-      const b=document.createElement("span");b.className="move-cell";b.textContent=hist[i+1]||"";
-      row.append(num,w,b);box.appendChild(row);
+  function updateStatus() {
+    if (!running && !finished) {
+      $("status").textContent = "برای شروع مسابقه، تنظیماتت رو انتخاب کن.";
+      return;
     }
-    box.scrollTop=box.scrollHeight;
+
+    if (finished) return;
+
+    if (game.in_checkmate()) {
+      $("status").textContent = "کیش و مات!";
+      return;
+    }
+
+    const side = game.turn() === "w" ? "سفید" : "مشکی";
+    let text = `نوبت ${side}`;
+
+    if (game.in_check()) text += " — کیش!";
+
+    if (mode === "ai" && game.turn() === aiColor) {
+      text += " — هوش مصنوعی در حال فکر کردنه...";
+    }
+
+    if (!timed) text += " · بدون محدودیت زمانی";
+
+    $("status").textContent = text;
   }
 
-  function humanTurn(){return mode==="pvp"||game.turn()==="w"}
+  function updateHistory() {
+    const box = $("moves");
+    const hist = game.history();
 
-  function tapSquare(sq){
-    if(!running||finished||pendingPromotion||!humanTurn())return;
-    const piece=game.get(sq);
-    if(selectedSquare){
-      const target=legalTargets.find(m=>m.to===sq);
-      if(target){
-        if(target.promotion){
-          pendingPromotion={from:selectedSquare,to:sq};
-          showPromotionChoices();return;
+    if (!hist.length) {
+      box.innerHTML = '<div class="note">هنوز حرکتی انجام نشده.</div>';
+      return;
+    }
+
+    box.innerHTML = "";
+
+    for (let i = 0; i < hist.length; i += 2) {
+      const row = document.createElement("div");
+      row.className = "move-row";
+
+      const num = document.createElement("span");
+      num.className = "move-num";
+      num.textContent = (Math.floor(i / 2) + 1) + ".";
+
+      const w = document.createElement("span");
+      w.className = "move-cell";
+      w.textContent = hist[i] || "";
+
+      const b = document.createElement("span");
+      b.className = "move-cell";
+      b.textContent = hist[i + 1] || "";
+
+      row.append(num, w, b);
+      box.appendChild(row);
+    }
+
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function humanTurn() {
+    return mode === "pvp" || game.turn() === humanColor;
+  }
+
+  function tapSquare(sq) {
+    if (!running || finished || pendingPromotion || !humanTurn()) return;
+
+    const piece = game.get(sq);
+
+    if (selectedSquare) {
+      const target = legalTargets.find(m => m.to === sq);
+
+      if (target) {
+        if (target.promotion) {
+          pendingPromotion = {from:selectedSquare, to:sq};
+          showPromotionChoices();
+          return;
         }
-        makeMove({from:selectedSquare,to:sq});return;
+
+        makeMove({from:selectedSquare, to:sq});
+        return;
       }
     }
-    if(piece&&piece.color===game.turn()){
-      selectedSquare=sq;legalTargets=game.moves({square:sq,verbose:true});
-    }else{selectedSquare=null;legalTargets=[]}
+
+    if (piece && piece.color === game.turn()) {
+      selectedSquare = sq;
+      legalTargets = game.moves({square:sq, verbose:true});
+    } else {
+      selectedSquare = null;
+      legalTargets = [];
+    }
+
     render();
   }
 
-  function showPromotionChoices(){
-    const pieces=game.turn()==="w"?{q:"♕",r:"♖",b:"♗",n:"♘"}:{q:"♛",r:"♜",b:"♝",n:"♞"};
-    document.querySelectorAll("[data-promo]").forEach(btn=>btn.textContent=pieces[btn.dataset.promo]);
+  function showPromotionChoices() {
+    const pieces = game.turn() === "w"
+      ? {q:"♕",r:"♖",b:"♗",n:"♘"}
+      : {q:"♛",r:"♜",b:"♝",n:"♞"};
+
+    document.querySelectorAll("[data-promo]").forEach(btn => {
+      btn.textContent = pieces[btn.dataset.promo];
+    });
+
     $("promotionModal").classList.remove("hidden");
   }
 
-  document.querySelectorAll("[data-promo]").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      if(!pendingPromotion)return;
-      const move={from:pendingPromotion.from,to:pendingPromotion.to,promotion:btn.dataset.promo};
-      pendingPromotion=null;$("promotionModal").classList.add("hidden");makeMove(move);
+  document.querySelectorAll("[data-promo]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!pendingPromotion) return;
+
+      const move = {
+        from:pendingPromotion.from,
+        to:pendingPromotion.to,
+        promotion:btn.dataset.promo
+      };
+
+      pendingPromotion = null;
+      $("promotionModal").classList.add("hidden");
+      makeMove(move);
     });
   });
 
-  function saveClockSnapshot(){
-    clockSnapshots.push({white:whiteSeconds,black:blackSeconds});
+  function saveClockSnapshot() {
+    clockSnapshots.push({
+      white:whiteSeconds,
+      black:blackSeconds
+    });
   }
 
-  function makeMove(move){
-    if(!running||finished)return false;
-    chargeClock();
-    if(finished)return false;
-    saveClockSnapshot();
-    const mover=game.turn();
-    let result=null;
-    try{result=game.move(move)}catch(e){result=null}
-    if(!result){clockSnapshots.pop();render();return false}
+  function makeMove(move) {
+    if (!running || finished) return false;
 
-    selectedSquare=null;legalTargets=[];
-    lastMove={from:result.from,to:result.to};
-    if(timed&&incrementSeconds>0)setRemaining(mover,remaining(mover)+incrementSeconds);
-    activeClock=game.turn();turnStartedAt=now();
+    chargeClock();
+    if (finished) return false;
+
+    saveClockSnapshot();
+
+    const mover = game.turn();
+    let result = null;
+
+    try {
+      result = game.move(move);
+    } catch (e) {
+      result = null;
+    }
+
+    if (!result) {
+      clockSnapshots.pop();
+      render();
+      return false;
+    }
+
+    selectedSquare = null;
+    legalTargets = [];
+    lastMove = {from:result.from, to:result.to};
+
+    if (timed && incrementSeconds > 0) {
+      setRemaining(mover, remaining(mover) + incrementSeconds);
+    }
+
+    activeClock = game.turn();
+    turnStartedAt = now();
     render();
 
-    if(game.game_over()){checkGameEnd();return true}
-    if(mode==="ai"&&game.turn()==="b")aiMove();
+    if (game.game_over()) {
+      checkGameEnd();
+      return true;
+    }
+
+    if (mode === "ai" && game.turn() === aiColor) {
+      aiMove();
+    }
+
     return true;
   }
 
-  function evaluate(){
-    if(game.in_checkmate())return game.turn()==="b"?-100000:100000;
-    if(game.in_draw()||game.game_over())return 0;
-    let score=0;
-    for(const row of game.board()){
-      for(const p of row){
-        if(p)score+=(p.color==="b"?1:-1)*(values[p.type]||0);
+  // ارزیابی موقعیت از دید هوش مصنوعی، همراه با ارزش مهره‌ها و موقعیت آن‌ها.
+  function evaluatePosition() {
+    if (game.in_checkmate()) {
+      return game.turn() === aiColor ? -100000 : 100000;
+    }
+
+    if (game.in_draw() || game.game_over()) return 0;
+
+    let score = 0;
+    const board = game.board();
+
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const p = board[r][c];
+        if (!p) continue;
+
+        const sign = p.color === aiColor ? 1 : -1;
+        score += sign * (values[p.type] || 0);
+
+        const center = 7 - (Math.abs(3.5 - r) + Math.abs(3.5 - c));
+
+        if (p.type === "n" || p.type === "b") {
+          score += sign * center * 4;
+        }
+
+        if (p.type === "p") {
+          const advance = p.color === "w" ? 6 - r : r - 1;
+          score += sign * advance * 5;
+        }
       }
     }
+
     return score;
   }
 
-  function minimax(depth,alpha,beta,maxBlack){
-    if(depth<=0||game.game_over())return evaluate();
-    const moves=game.moves({verbose:true});
-    if(maxBlack){
-      let best=-Infinity;
-      for(const m of moves){
-        game.move({from:m.from,to:m.to,promotion:m.promotion||"q"});
-        best=Math.max(best,minimax(depth-1,alpha,beta,false));
-        game.undo();alpha=Math.max(alpha,best);
-        if(beta<=alpha)break;
+  function minimax(depth, alpha, beta, maximizingAI) {
+    if (depth <= 0 || game.game_over()) return evaluatePosition();
+
+    const moves = game.moves({verbose:true});
+
+    if (maximizingAI) {
+      let best = -Infinity;
+
+      for (const m of moves) {
+        game.move({
+          from:m.from,
+          to:m.to,
+          promotion:m.promotion || "q"
+        });
+
+        best = Math.max(
+          best,
+          minimax(depth - 1, alpha, beta, false)
+        );
+
+        game.undo();
+        alpha = Math.max(alpha, best);
+
+        if (beta <= alpha) break;
       }
+
       return best;
-    }else{
-      let best=Infinity;
-      for(const m of moves){
-        game.move({from:m.from,to:m.to,promotion:m.promotion||"q"});
-        best=Math.min(best,minimax(depth-1,alpha,beta,true));
-        game.undo();beta=Math.min(beta,best);
-        if(beta<=alpha)break;
+    }
+
+    let best = Infinity;
+
+    for (const m of moves) {
+      game.move({
+        from:m.from,
+        to:m.to,
+        promotion:m.promotion || "q"
+      });
+
+      best = Math.min(
+        best,
+        minimax(depth - 1, alpha, beta, true)
+      );
+
+      game.undo();
+      beta = Math.min(beta, best);
+
+      if (beta <= alpha) break;
+    }
+
+    return best;
+  }
+
+  function chooseEasyMove(moves) {
+    const scored = [];
+
+    for (const m of moves) {
+      game.move({
+        from:m.from,
+        to:m.to,
+        promotion:m.promotion || "q"
+      });
+
+      const score = evaluatePosition() + (Math.random() - 0.5) * 180;
+      game.undo();
+
+      scored.push({move:m, score});
+    }
+
+    scored.sort((a, b) => b.score - a.score);
+
+    // از میان چند گزینهٔ قابل‌قبول، انتخاب تصادفی می‌کند تا آسان‌تر باشد.
+    const poolSize = Math.max(1, Math.ceil(scored.length * 0.4));
+    const pool = scored.slice(0, poolSize);
+
+    return pool[Math.floor(Math.random() * pool.length)].move;
+  }
+
+  function aiMove() {
+    if (
+      !running ||
+      finished ||
+      game.turn() !== aiColor ||
+      mode !== "ai"
+    ) return;
+
+    const token = ++aiToken;
+    updateStatus();
+
+    // زمان مکث پیش از حرکت؛ کمی تغییر تصادفی باعث می‌شود حرکات ماشینی به نظر نرسند.
+    let delay;
+
+    if (difficulty === "easy") {
+      delay = 2200 + Math.random() * 800;
+    } else if (difficulty === "medium") {
+      delay = 1500 + Math.random() * 700;
+    } else {
+      delay = 1000 + Math.random() * 700;
+    }
+
+    setTimeout(() => {
+      if (
+        token !== aiToken ||
+        !running ||
+        finished ||
+        game.turn() !== aiColor ||
+        mode !== "ai"
+      ) return;
+
+      const moves = game.moves({verbose:true});
+
+      if (!moves.length) {
+        checkGameEnd();
+        return;
       }
-      return best;
+
+      let chosen;
+
+      if (difficulty === "easy") {
+        chosen = chooseEasyMove(moves);
+      } else {
+        const depth = difficulty === "hard" ? 3 : 2;
+        let best = -Infinity;
+        let candidates = [];
+
+        for (const m of moves) {
+          game.move({
+            from:m.from,
+            to:m.to,
+            promotion:m.promotion || "q"
+          });
+
+          const score = minimax(
+            depth - 1,
+            -Infinity,
+            Infinity,
+            game.turn() === aiColor
+          );
+
+          game.undo();
+
+          if (score > best) {
+            best = score;
+            candidates = [m];
+          } else if (score === best) {
+            candidates.push(m);
+          }
+        }
+
+        chosen = candidates[
+          Math.floor(Math.random() * candidates.length)
+        ];
+      }
+
+      if (chosen) {
+        makeMove({
+          from:chosen.from,
+          to:chosen.to,
+          promotion:chosen.promotion || "q"
+        });
+      }
+    }, delay);
+  }
+
+  function checkGameEnd() {
+    if (game.in_checkmate()) {
+      finishGame(
+        game.turn() === "w" ? "مشکی برنده شد!" : "سفید برنده شد!",
+        "کیش و مات!"
+      );
+    } else if (game.in_draw()) {
+      finishGame("بازی مساوی شد!", "بازی مساوی شد.");
+    } else if (game.game_over()) {
+      finishGame("پایان مسابقه", "بازی به پایان رسید.");
     }
   }
 
-  function aiMove(){
-    if(!running||finished||game.turn()!=="b"||mode!=="ai")return;
-    const token=++aiToken;
-    updateStatus();
-    setTimeout(()=>{
-      if(token!==aiToken||!running||finished||game.turn()!=="b"||mode!=="ai")return;
-      const moves=game.moves({verbose:true});
-      if(!moves.length){checkGameEnd();return}
-      let chosen;
-      if(difficulty==="easy"){
-        chosen=moves[Math.floor(Math.random()*moves.length)];
-      }else{
-        const depth=difficulty==="hard"?3:2;
-        let best=-Infinity,candidates=[];
-        for(const m of moves){
-          game.move({from:m.from,to:m.to,promotion:m.promotion||"q"});
-          const score=minimax(depth-1,-Infinity,Infinity,game.turn()==="b");
-          game.undo();
-          if(score>best){best=score;candidates=[m]}
-          else if(score===best)candidates.push(m);
-        }
-        chosen=candidates[Math.floor(Math.random()*candidates.length)];
-      }
-      if(chosen)makeMove({from:chosen.from,to:chosen.to,promotion:chosen.promotion||"q"});
-    },180);
-  }
+  function finishGame(title, message) {
+    if (finished) return;
 
-  function checkGameEnd(){
-    if(game.in_checkmate())finishGame(game.turn()==="w"?"مشکی برنده شد!":"سفید برنده شد!","کیش و مات!");
-    else if(game.in_draw())finishGame("بازی مساوی شد!","بازی مساوی شد.");
-    else if(game.game_over())finishGame("پایان مسابقه","بازی به پایان رسید.");
-  }
+    finished = true;
+    running = false;
+    turnStartedAt = 0;
+    aiToken++;
 
-  function finishGame(title,message){
-    if(finished)return;
-    finished=true;running=false;turnStartedAt=0;aiToken++;
-    if(clockInterval){clearInterval(clockInterval);clockInterval=null}
-    renderClocks();updateStatus();
-    $("endTitle").textContent=title;$("endMessage").textContent=message;
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+
+    renderClocks();
+    $("endTitle").textContent = title;
+    $("endMessage").textContent = message;
     $("endOverlay").classList.remove("hidden");
   }
 
-  function beginGame(){
+  function beginGame() {
     aiToken++;
-    if(clockInterval){clearInterval(clockInterval);clockInterval=null}
-    game=new Chess();
-    selectedSquare=null;legalTargets=[];lastMove=null;flipped=false;
-    running=true;finished=false;pendingPromotion=null;clockSnapshots=[];
-    mode=$("startMode").value;difficulty=$("difficulty").value;
 
-    const t=Number($("timeControl").value);
-    timed=t!==0;
-    if(t===182){baseSeconds=180;incrementSeconds=2}
-    else if(t===303){baseSeconds=300;incrementSeconds=3}
-    else if(t===910){baseSeconds=900;incrementSeconds=10}
-    else{baseSeconds=t;incrementSeconds=0}
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
 
-    whiteSeconds=baseSeconds;blackSeconds=baseSeconds;
-    activeClock="w";turnStartedAt=now();
+    game = new Chess();
+    selectedSquare = null;
+    legalTargets = [];
+    lastMove = null;
+    running = true;
+    finished = false;
+    pendingPromotion = null;
+    clockSnapshots = [];
+
+    mode = $("startMode").value;
+    difficulty = $("difficulty").value;
+    humanColor = $("playerColor").value;
+    aiColor = humanColor === "w" ? "b" : "w";
+
+    const t = Number($("timeControl").value);
+
+    timed = t !== 0;
+
+    if (t === 182) {
+      baseSeconds = 180;
+      incrementSeconds = 2;
+    } else if (t === 303) {
+      baseSeconds = 300;
+      incrementSeconds = 3;
+    } else if (t === 910) {
+      baseSeconds = 900;
+      incrementSeconds = 10;
+    } else {
+      baseSeconds = t;
+      incrementSeconds = 0;
+    }
+
+    whiteSeconds = baseSeconds;
+    blackSeconds = baseSeconds;
+    activeClock = "w";
+    turnStartedAt = now();
+
+    // اگر کاربر مشکی باشد، صفحه طوری می‌چرخد که مهره‌های او پایین باشند.
+    flipped = mode === "ai" && humanColor === "b";
 
     $("setupOverlay").classList.add("hidden");
     $("endOverlay").classList.add("hidden");
     $("promotionModal").classList.add("hidden");
 
-    $("whiteName").textContent=mode==="ai"?"شما · سفید":"بازیکن اول · سفید";
-    $("blackName").textContent=mode==="ai"?"هوش مصنوعی · مشکی":"بازیکن دوم · مشکی";
-    $("whiteSub").textContent="مهره‌های سفید";
-    $("blackSub").textContent=mode==="ai"?"درجه سختی: "+({easy:"آسان",medium:"متوسط",hard:"سخت"}[difficulty]):"مهره‌های مشکی";
+    $("whiteName").textContent = mode === "ai"
+      ? (humanColor === "w" ? "شما · سفید" : "هوش مصنوعی · سفید")
+      : "بازیکن اول · سفید";
+
+    $("blackName").textContent = mode === "ai"
+      ? (humanColor === "b" ? "شما · مشکی" : "هوش مصنوعی · مشکی")
+      : "بازیکن دوم · مشکی";
+
+    $("whiteSub").textContent =
+      mode === "ai" && aiColor === "w"
+        ? "درجه سختی: " + ({easy:"آسان",medium:"متوسط",hard:"سخت"}[difficulty])
+        : "مهره‌های سفید";
+
+    $("blackSub").textContent =
+      mode === "ai" && aiColor === "b"
+        ? "درجه سختی: " + ({easy:"آسان",medium:"متوسط",hard:"سخت"}[difficulty])
+        : "مهره‌های مشکی";
 
     render();
-    clockInterval=setInterval(()=>{
-      if(!running||finished||!timed)return;
-      chargeClock();renderClocks();
-    },100);
+
+    clockInterval = setInterval(() => {
+      if (!running || finished || !timed) return;
+      chargeClock();
+      renderClocks();
+    }, 100);
+
+    // اگر هوش مصنوعی سفید باشد، او اولین حرکت مسابقه را انجام می‌دهد.
+    if (mode === "ai" && game.turn() === aiColor) {
+      aiMove();
+    }
   }
 
-  function undoMove(){
-    if(!game.history().length||pendingPromotion)return;
-    aiToken++;
-    $("promotionModal").classList.add("hidden");pendingPromotion=null;
-    chargeClock();
-    if(finished&&remaining(activeClock)<=0)return;
+  function undoMove() {
+    if (!game.history().length || pendingPromotion) return;
 
-    const count=mode==="ai"&&game.history().length>=2?2:1;
-    let snapshot=null;
-    for(let i=0;i<count;i++){
-      if(!game.history().length)break;
-      snapshot=clockSnapshots.pop()||snapshot;
+    aiToken++;
+    $("promotionModal").classList.add("hidden");
+    pendingPromotion = null;
+
+    chargeClock();
+
+    if (finished && remaining(activeClock) <= 0) return;
+
+    // اگر هوش مصنوعی تازه حرکت کرده باشد، حرکت او و حرکت قبلی کاربر برمی‌گردند.
+    const count = mode === "ai" &&
+      game.turn() === humanColor &&
+      game.history().length >= 2 ? 2 : 1;
+
+    let snapshot = null;
+
+    for (let i = 0; i < count; i++) {
+      if (!game.history().length) break;
+      const previous = clockSnapshots.pop();
+      if (previous) snapshot = previous;
       game.undo();
     }
-    if(snapshot){whiteSeconds=snapshot.white;blackSeconds=snapshot.black}
-    finished=false;running=true;$("endOverlay").classList.add("hidden");
-    selectedSquare=null;legalTargets=[];
-    const hist=game.history({verbose:true});
-    lastMove=hist.length?{from:hist[hist.length-1].from,to:hist[hist.length-1].to}:null;
-    activeClock=game.turn();turnStartedAt=now();
+
+    if (snapshot) {
+      whiteSeconds = snapshot.white;
+      blackSeconds = snapshot.black;
+    }
+
+    finished = false;
+    running = true;
+    $("endOverlay").classList.add("hidden");
+
+    selectedSquare = null;
+    legalTargets = [];
+
+    const hist = game.history({verbose:true});
+    lastMove = hist.length
+      ? {from:hist[hist.length - 1].from, to:hist[hist.length - 1].to}
+      : null;
+
+    activeClock = game.turn();
+    turnStartedAt = now();
+
     render();
+
+    if (clockInterval) clearInterval(clockInterval);
+    clockInterval = setInterval(() => {
+      if (!running || finished || !timed) return;
+      chargeClock();
+      renderClocks();
+    }, 100);
+
+    if (mode === "ai" && game.turn() === aiColor) {
+      aiMove();
+    }
   }
 
-  function showSetup(){
-    running=false;finished=false;aiToken++;turnStartedAt=0;
-    if(clockInterval){clearInterval(clockInterval);clockInterval=null}
+  function showSetup() {
+    running = false;
+    finished = false;
+    aiToken++;
+    turnStartedAt = 0;
+
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+
     $("endOverlay").classList.add("hidden");
     $("promotionModal").classList.add("hidden");
     $("setupOverlay").classList.remove("hidden");
     renderClocks();
   }
 
-  $("overlayStartBtn").addEventListener("click",beginGame);
-  $("newBtn").addEventListener("click",showSetup);
-  $("undoBtn").addEventListener("click",undoMove);
-  $("flipBtn").addEventListener("click",()=>{flipped=!flipped;render()});
-  $("startMode").addEventListener("change",()=>{
-    $("difficultyField").classList.toggle("hidden",$("startMode").value!=="ai");
-  });
-  $("againBtn").addEventListener("click",beginGame);
-  $("closeEndBtn").addEventListener("click",()=>$("endOverlay").classList.add("hidden"));
+  function syncModeFields() {
+    const isAI = $("startMode").value === "ai";
+    $("difficultyField").classList.toggle("hidden", !isAI);
+    $("playerColorField").classList.toggle("hidden", !isAI);
+  }
 
-  render();renderClocks();
+  $("overlayStartBtn").addEventListener("click", beginGame);
+  $("newBtn").addEventListener("click", showSetup);
+  $("undoBtn").addEventListener("click", undoMove);
+  $("flipBtn").addEventListener("click", () => {
+    flipped = !flipped;
+    render();
+  });
+
+  $("startMode").addEventListener("change", syncModeFields);
+  $("againBtn").addEventListener("click", beginGame);
+  $("closeEndBtn").addEventListener("click", () => {
+    $("endOverlay").classList.add("hidden");
+  });
+
+  syncModeFields();
+  render();
+  renderClocks();
 }
 </script>
 </body>
